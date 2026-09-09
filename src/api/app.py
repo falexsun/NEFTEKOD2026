@@ -1,7 +1,10 @@
 """FastAPI application — HTTP API for all agents.
 
-Uses singleton agent instances (created at startup, not per request).
-Each agent has /health and /ready distinction.
+Uses singleton agents (created at startup).
+/model/info for model metadata.
+/ready checks is_ready (model + schema), not just is_available.
+/safety/check uses typed Pydantic request (no magic defaults).
+/decision uses ControlRegistry for controls.
 """
 from __future__ import annotations
 
@@ -17,27 +20,31 @@ from pydantic import BaseModel, Field
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 logger = logging.getLogger(__name__)
 
-# ── Singleton agents (created once at startup) ──────────────────
 _agents = {}
+_control_registry = None
 
 
 def _init_agents():
-    """Initialize singleton agent instances."""
+    global _control_registry
     from src.agents.data_quality.agent import DataQualityAgent
     from src.agents.quality.agent import QualityAgent
     from src.agents.reliability.agent import ReliabilityAgent
     from src.agents.optimization.agent import OptimizationAgent
     from src.agents.safety.agent import SafetyAgent
     from src.agents.surrogate.model import SurrogateModel
+    from src.shared.tags.registry import ControlRegistry
 
     model_dir = os.environ.get("MODEL_DIR", "models")
+    config_dir = os.environ.get("CONFIG_DIR", "configs")
+
+    _control_registry = ControlRegistry(os.path.join(config_dir, "controls.yaml"))
 
     quality_agent = QualityAgent(model_dir=model_dir)
     reliability_agent = ReliabilityAgent()
     dq_agent = DataQualityAgent()
-    surrogate = SurrogateModel()  # No model loaded — will report unavailable
+    surrogate = SurrogateModel()
     optimization_agent = OptimizationAgent(surrogate=surrogate, n_scenarios=5, seed=42)
-    safety_agent = SafetyAgent()
+    safety_agent = SafetyAgent(control_registry=_control_registry)
 
     _agents["data_quality"] = dq_agent
     _agents["quality"] = quality_agent
@@ -47,8 +54,9 @@ def _init_agents():
     _agents["surrogate"] = surrogate
 
     logger.info(
-        f"Agents initialized: quality_available={quality_agent.is_available}, "
-        f"surrogate_available={surrogate.is_available}"
+        f"Agents initialized: quality_ready={quality_agent.is_ready}, "
+        f"surrogate_available={surrogate.is_available}, "
+        f"controls={len(_control_registry.get_control_candidates())}"
     )
 
 
@@ -57,20 +65,17 @@ async def lifespan(app: FastAPI):
     _init_agents()
     yield
 
-
 app = FastAPI(
     title="NefteKod — Diesel Fuel Quality Control System",
-    description="Multi-agent system for diesel fuel quality prediction and optimization",
-    version="0.2.0",
+    version="0.3.0",
     lifespan=lifespan,
 )
 
 
-# ── Request/Response models ─────────────────────────────────────
+# ── Request/Response Models ─────────────────────────────────────
 
 class PredictRequest(BaseModel):
     feature_vector: dict[str, float]
-    timestamp: str | None = None
 
 class PredictResponse(BaseModel):
     indicator: str
@@ -78,7 +83,7 @@ class PredictResponse(BaseModel):
     lower_bound: float | None = None
     upper_bound: float | None = None
     violation_probability: float | None = None
-    confidence: float
+    confidence: float | None = None
     model_version: str
     model_available: bool
     unavailability_reason: str | None = None
@@ -87,44 +92,72 @@ class DecisionRequest(BaseModel):
     avt_telemetry: dict[str, float]
     unit_242000_telemetry: dict[str, float]
     timestamp: str | None = None
+    sulfur_value: float | None = None
+    sulfur_ts: str | None = None
 
-class HealthResponse(BaseModel):
-    status: str
-    timestamp: str
-    service: str = "gateway"
+class SafetyCheckRequest(BaseModel):
+    """Typed safety check request — no magic defaults."""
+    predicted_sulfur: float
+    sulfur_std: float
+    violation_probability: float
+    confidence: float | None = None
+    data_quality_score: float
+    model_available: bool = True
+    action: dict[str, float] = Field(default_factory=dict)
 
 class ReadyResponse(BaseModel):
     ready: bool
+    prediction_ready: bool
+    optimization_ready: bool
     services: dict[str, bool]
-    timestamp: str
 
 
 # ── Health / Readiness ──────────────────────────────────────────
 
-@app.get("/health", response_model=HealthResponse)
+@app.get("/health")
 async def health():
-    return HealthResponse(status="ok", timestamp=datetime.utcnow().isoformat())
+    return {"status": "ok", "timestamp": datetime.utcnow().isoformat()}
 
 
 @app.get("/ready", response_model=ReadyResponse)
 async def ready():
-    """Readiness check: are all agents loaded and ready?"""
+    qa = _agents.get("quality")
+    sur = _agents.get("surrogate")
+
+    prediction_ready = qa is not None and qa.is_ready
+    optimization_ready = sur is not None and sur.is_available
+
     services = {
         "data_quality": "data_quality" in _agents,
-        "quality": _agents.get("quality", None) is not None and _agents["quality"].is_available,
+        "quality_ready": prediction_ready,
         "reliability": "reliability" in _agents,
         "optimization": "optimization" in _agents,
         "safety": "safety" in _agents,
+        "surrogate_available": optimization_ready,
     }
-    all_ready = all(services.values())
-    return ReadyResponse(ready=all_ready, services=services, timestamp=datetime.utcnow().isoformat())
+
+    return ReadyResponse(
+        ready=prediction_ready,  # Gateway is ready if prediction works
+        prediction_ready=prediction_ready,
+        optimization_ready=optimization_ready,
+        services=services,
+    )
 
 
-# ── Endpoints ───────────────────────────────────────────────────
+# ── Model Info ──────────────────────────────────────────────────
+
+@app.get("/model/info")
+async def model_info():
+    qa = _agents.get("quality")
+    if qa is None:
+        return {"model_available": False, "model_ready": False}
+    return qa.get_model_info()
+
+
+# ── Quality Prediction ──────────────────────────────────────────
 
 @app.post("/quality/predict", response_model=PredictResponse)
 async def quality_predict(request: PredictRequest):
-    """Predict quality indicators using the quality agent."""
     from src.shared.schemas.process_state import ProcessState
 
     agent = _agents.get("quality")
@@ -147,11 +180,11 @@ async def quality_predict(request: PredictRequest):
     )
 
 
+# ── Reliability ─────────────────────────────────────────────────
+
 @app.post("/reliability/evaluate")
 async def reliability_evaluate(request: DecisionRequest):
-    """Evaluate reliability risk."""
     from src.shared.schemas.process_state import ProcessState
-
     agent = _agents.get("reliability")
     if agent is None:
         raise HTTPException(status_code=503, detail="Reliability agent not initialized")
@@ -161,22 +194,16 @@ async def reliability_evaluate(request: DecisionRequest):
         avt_telemetry=request.avt_telemetry,
         unit_242000_telemetry=request.unit_242000_telemetry,
     )
-    result = agent.evaluate(state)
-    return result.model_dump()
+    return agent.evaluate(state).model_dump()
 
+
+# ── Safety Check ────────────────────────────────────────────────
 
 @app.post("/safety/check")
-async def safety_check(
-    predicted_sulfur: float = 7.0,
-    sulfur_std: float = 1.5,
-    violation_probability: float = 0.1,
-    confidence: float = 0.5,
-    data_quality: float = 1.0,
-    model_available: bool = True,
-):
-    """Run safety checks on a prediction."""
+async def safety_check(request: SafetyCheckRequest):
+    """Safety check with typed request — NO magic defaults."""
     from src.shared.schemas.quality_prediction import QualityPrediction
-    from src.agents.safety.agent import SafetyAgent
+    from src.agents.optimization.agent import ScenarioEvaluation
 
     agent = _agents.get("safety")
     if agent is None:
@@ -184,20 +211,21 @@ async def safety_check(
 
     quality_pred = QualityPrediction(
         indicator="sulfur",
-        prediction=predicted_sulfur,
-        lower_bound=predicted_sulfur - 1.96 * sulfur_std,
-        upper_bound=predicted_sulfur + 1.96 * sulfur_std,
-        violation_probability=violation_probability,
-        confidence=confidence,
-        model_available=model_available,
+        prediction=request.predicted_sulfur,
+        lower_bound=request.predicted_sulfur - 1.96 * request.sulfur_std,
+        upper_bound=request.predicted_sulfur + 1.96 * request.sulfur_std,
+        violation_probability=request.violation_probability,
+        confidence=request.confidence,
+        model_available=request.model_available,
     )
     result = agent.check_quality_prediction(quality_pred)
     return result.model_dump()
 
 
+# ── Decision ────────────────────────────────────────────────────
+
 @app.post("/decision")
 async def make_decision(request: DecisionRequest):
-    """Run full decision pipeline."""
     from src.shared.schemas.process_state import ProcessState
     from src.agents.orchestrator.agent import OrchestratorAgent
 
@@ -216,21 +244,18 @@ async def make_decision(request: DecisionRequest):
         unit_242000_telemetry=request.unit_242000_telemetry,
     )
 
-    # Build controls from config, not from telemetry ±20%
-    # For now, use a minimal set — will be replaced by ControlRegistry
-    controls = _build_controls_from_config()
+    # Build feature vector — for now, use raw telemetry as canonical keys
+    # Full runtime feature pipeline requires history buffer (Phase 3)
+    state.feature_vector = {**request.avt_telemetry, **request.unit_242000_telemetry}
+
+    controls = _control_registry.get_optimization_bounds() if _control_registry else {}
 
     orchestrator = OrchestratorAgent(
-        data_quality_agent=dq,
-        quality_agent=qa,
-        reliability_agent=ra,
-        optimization_agent=oa,
-        safety_agent=sa,
-        controls=controls,
+        data_quality_agent=dq, quality_agent=qa, reliability_agent=ra,
+        optimization_agent=oa, safety_agent=sa, controls=controls,
     )
 
     result = orchestrator.run_decision_cycle(state)
-
     return {
         "decision_id": result.decision_id,
         "recommendation_type": "recommendation" if hasattr(result, "recommended_changes") else "abstain",
@@ -238,55 +263,40 @@ async def make_decision(request: DecisionRequest):
     }
 
 
-def _build_controls_from_config() -> dict[str, tuple[float, float]]:
-    """Build controls from configs/controls.yaml (not from telemetry)."""
-    import yaml
-    config_path = os.path.join(os.environ.get("CONFIG_DIR", "configs"), "controls.yaml")
-    if os.path.exists(config_path):
-        with open(config_path) as f:
-            config = yaml.safe_load(f)
-        controls = {}
-        for name, spec in config.get("variables", {}).items():
-            if "control_candidate" in spec.get("role", []):
-                pr = spec.get("plausible_range")
-                if pr and len(pr) == 2:
-                    controls[name] = (pr[0], pr[1])
-        return controls
-    return {}
+# ── Agents Status ───────────────────────────────────────────────
+
+@app.get("/agents/status")
+async def agents_status():
+    qa = _agents.get("quality")
+    sur = _agents.get("surrogate")
+    return {
+        "data_quality": {"initialized": "data_quality" in _agents},
+        "quality": {
+            "initialized": qa is not None,
+            "model_available": qa.is_available if qa else False,
+            "model_ready": qa.is_ready if qa else False,
+        },
+        "reliability": {"initialized": "reliability" in _agents},
+        "optimization": {"initialized": "optimization" in _agents},
+        "safety": {"initialized": "safety" in _agents},
+        "surrogate": {
+            "initialized": sur is not None,
+            "available": sur.is_available if sur else False,
+        },
+        "control_registry": {
+            "loaded": _control_registry is not None,
+            "n_controls": len(_control_registry.get_control_candidates()) if _control_registry else 0,
+        },
+    }
 
 
 @app.get("/models")
 async def list_models():
-    """List available models."""
     models_dir = os.environ.get("MODEL_DIR", "models")
     models = []
     if os.path.exists(models_dir):
         for f in os.listdir(models_dir):
             if f.endswith(".pkl"):
                 path = os.path.join(models_dir, f)
-                models.append({
-                    "name": f,
-                    "size_bytes": os.path.getsize(path),
-                    "modified": datetime.fromtimestamp(os.path.getmtime(path)).isoformat(),
-                })
+                models.append({"name": f, "size_bytes": os.path.getsize(path)})
     return {"models": models}
-
-
-@app.get("/agents/status")
-async def agents_status():
-    """Get status of all agents."""
-    return {
-        "data_quality": {"initialized": "data_quality" in _agents},
-        "quality": {
-            "initialized": "quality" in _agents,
-            "model_available": _agents.get("quality", None) is not None and _agents["quality"].is_available,
-            "model_type": getattr(_agents.get("quality"), "model_type", None),
-        },
-        "reliability": {"initialized": "reliability" in _agents},
-        "optimization": {"initialized": "optimization" in _agents},
-        "safety": {"initialized": "safety" in _agents},
-        "surrogate": {
-            "initialized": "surrogate" in _agents,
-            "available": _agents.get("surrogate", None) is not None and _agents["surrogate"].is_available,
-        },
-    }

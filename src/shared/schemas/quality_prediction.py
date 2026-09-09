@@ -8,7 +8,7 @@ class QualityPrediction(BaseModel):
     """ML prediction for a quality indicator.
 
     When model_available=False, prediction/lower_bound/upper_bound/violation_probability
-    will be None — Orchestrator MUST check model_available before using prediction.
+    will be None. Orchestrator MUST check model_available before using.
     """
     indicator: str  # e.g. "sulfur", "density", "t95"
 
@@ -18,11 +18,15 @@ class QualityPrediction(BaseModel):
     upper_bound: float | None = None
     violation_probability: float | None = None
 
-    confidence: float = Field(ge=0.0, le=1.0, default=0.0)
+    # confidence is None when no calibrated confidence is available
+    confidence: float | None = Field(ge=0.0, le=1.0, default=None)
     model_version: str = "unknown"
     model_type: str = "unknown"
 
-    # NEW: availability tracking
+    # Availability tracking
     model_available: bool = True
     unavailability_reason: str | None = None
-    uncertainty_method: str | None = None  # e.g. "approximate_std_1.5", "conformal"
+
+    # Uncertainty tracking — separate from confidence
+    uncertainty_method: str | None = None  # "approximate_std_1.5", "conformal", etc.
+    uncertainty_value: float | None = None  # The actual std estimate used

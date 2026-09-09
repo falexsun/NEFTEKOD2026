@@ -1,7 +1,8 @@
 """Reliability Agent — assesses process risk via operating envelope deviation.
 
-Uses historical operating envelope, NOT industrial safety limits.
-No failure labels available → proxy-based assessment.
+Uses canonical tags (avt_T6, u24_T6 are SEPARATE signals).
+No failure labels → proxy-based assessment.
+Baseline risk is a documented assumption, not a statistical calculation.
 """
 from __future__ import annotations
 
@@ -17,42 +18,40 @@ logger = logging.getLogger(__name__)
 
 
 class ReliabilityAgent:
-    """Evaluates process reliability risk without explicit failure labels.
-
-    Uses a combination of:
-    - Historical operating envelope deviation
-    - Rate-of-change analysis
-    - Frozen sensor detection (via history, not single values)
-    - Duration near boundaries
-    """
+    """Evaluates process reliability risk without failure labels."""
 
     def __init__(
         self,
         operating_envelope: dict[str, tuple[float, float]] | None = None,
         risk_threshold: float = 0.7,
-        frozen_sensor_window: int = 6,
-        frozen_sensor_std_threshold: float = 0.001,
+        frozen_window: int = 6,
+        frozen_std_threshold: float = 0.001,
+        baseline_risk: float = 0.1,
     ):
         self.risk_threshold = risk_threshold
         self.envelope = operating_envelope or {}
-        self.frozen_sensor_window = frozen_sensor_window
-        self.frozen_sensor_std_threshold = frozen_sensor_std_threshold
-        # History buffer for frozen sensor detection
+        self.frozen_window = frozen_window
+        self.frozen_std_threshold = frozen_std_threshold
+        self.baseline_risk = baseline_risk  # DOCUMENTED assumption in assumptions.yaml
         self._history: dict[str, list[float]] = defaultdict(list)
 
     def evaluate(self, state: ProcessState) -> ReliabilityAssessment:
-        """Assess reliability risk for the current process state."""
         factors = []
         risk_scores = []
         assumptions = [
             "Risk assessment uses historical operating envelope, not failure labels",
-            "No direct degradation/failure data available — proxy-based assessment",
-            "Operating envelope is derived from historical data, not industrial limits",
+            "Operating envelope derived from historical data, not industrial limits",
+            f"Baseline risk={self.baseline_risk} is an assumption (documented in assumptions.yaml)",
         ]
 
-        all_signals = {**state.avt_telemetry, **state.unit_242000_telemetry}
+        # Use canonical tags — avt_T6 and u24_T6 are SEPARATE
+        all_signals = {}
+        for k, v in state.avt_telemetry.items():
+            all_signals[f"avt_{k}" if not k.startswith("avt_") else k] = v
+        for k, v in state.unit_242000_telemetry.items():
+            all_signals[f"u24_{k}" if not k.startswith("u24_") else k] = v
 
-        # ── 1. Operating envelope deviation ──────────────────
+        # 1. Operating envelope deviation
         for name, val in all_signals.items():
             if name in self.envelope:
                 low, high = self.envelope[name]
@@ -65,78 +64,38 @@ class ReliabilityAgent:
                     risk_scores.append(min(1.0, deviation))
                     factors.append(f"{name}={val:.1f} above envelope [{low:.1f}, {high:.1f}]")
 
-        # ── 2. Frozen sensor detection (via history) ─────────
-        frozen_sensors = self._detect_frozen_sensors(all_signals)
-        if frozen_sensors:
-            risk_scores.append(min(0.5, len(frozen_sensors) * 0.1))
-            factors.append(f"Frozen sensors detected: {frozen_sensors}")
+        # 2. Frozen sensor detection (canonical names prevent collision)
+        frozen = self._detect_frozen(all_signals)
+        if frozen:
+            risk_scores.append(min(0.5, len(frozen) * 0.1))
+            factors.append(f"Frozen sensors: {frozen}")
 
-        # ── 3. Extreme values ────────────────────────────────
+        # 3. Extreme values
         for name, val in all_signals.items():
             if abs(val) > 1e6:
                 risk_scores.append(0.3)
-                factors.append(f"{name}={val:.1f} extreme value")
+                factors.append(f"{name}={val:.1f} extreme")
 
-        # ── Overall risk ─────────────────────────────────────
-        if risk_scores:
-            overall_risk = float(np.mean(risk_scores))
-        else:
-            overall_risk = 0.1  # Low baseline risk
+        overall_risk = float(np.mean(risk_scores)) if risk_scores else self.baseline_risk
 
-        # Risk level
-        if overall_risk >= 0.8:
-            level = "critical"
-        elif overall_risk >= 0.6:
-            level = "high"
-        elif overall_risk >= 0.3:
-            level = "medium"
-        else:
-            level = "low"
-
-        constraints = []
-        if overall_risk >= self.risk_threshold:
-            constraints.append("High risk — optimization should be conservative")
+        level = "critical" if overall_risk >= 0.8 else "high" if overall_risk >= 0.6 else "medium" if overall_risk >= 0.3 else "low"
+        constraints = ["High risk — optimization should be conservative"] if overall_risk >= self.risk_threshold else []
 
         return ReliabilityAssessment(
-            risk_score=overall_risk,
-            risk_level=level,
-            factors=factors,
-            constraints=constraints,
-            assumptions=assumptions,
+            risk_score=overall_risk, risk_level=level, factors=factors,
+            constraints=constraints, assumptions=assumptions,
         )
 
-    def _detect_frozen_sensors(self, signals: dict[str, float]) -> list[str]:
-        """Detect frozen sensors using rolling history.
-
-        A sensor is frozen if:
-        - Last N readings have std < threshold (consecutive identical/near-identical values)
-        - NOT by checking if a single value is an integer
-
-        This correctly identifies sensors stuck at the same value over time,
-        while NOT flagging legitimate integer-like readings (e.g. temperature=234.0).
-        """
+    def _detect_frozen(self, signals: dict[str, float]) -> list[str]:
         frozen = []
-
         for name, val in signals.items():
-            # Update history
             history = self._history[name]
             history.append(val)
-            # Keep only last N readings
-            if len(history) > self.frozen_sensor_window:
-                history[:] = history[-self.frozen_sensor_window:]
-
-            # Need at least window_size readings to check
-            if len(history) < self.frozen_sensor_window:
-                continue
-
-            # Check if std is essentially zero (all readings identical)
-            arr = np.array(history)
-            std = np.std(arr)
-            if std < self.frozen_sensor_std_threshold:
+            if len(history) > self.frozen_window:
+                history[:] = history[-self.frozen_window:]
+            if len(history) >= self.frozen_window and np.std(history) < self.frozen_std_threshold:
                 frozen.append(name)
-
         return frozen
 
     def reset_history(self):
-        """Reset frozen sensor history (e.g., on restart)."""
         self._history.clear()
