@@ -135,8 +135,12 @@ def build_features(
 
 
 def _select_key_columns(df: pd.DataFrame) -> list[str]:
-    """Select the most informative telemetry columns for feature engineering."""
-    # Priority columns based on domain knowledge
+    """Select the most informative telemetry columns for feature engineering.
+
+    Uses shared FEATURE_KEY_COLUMNS from transformer as single source of truth.
+    """
+    from src.feature_service.transformer import FEATURE_KEY_COLUMNS
+    # Priority columns based on domain knowledge (from shared transformer)
     priority_avt = [
         "avt_T1", "avt_T6", "avt_T33", "avt_T55", "avt_F3", "avt_F5",
         "avt_F7", "avt_F8", "avt_F9", "avt_D10", "avt_T20",
