@@ -1,0 +1,105 @@
+# Domain knowledge for feature engineering, lag search, optimizer bounds
+# Based on Теги_хакатон.xlsx ВАК sheet and domain understanding
+
+# Key AVT parameters affecting downstream quality
+avt_T6:
+  stage: AVT
+  role: [state, control_candidate]
+  affects:
+    sulfur:
+      direction: uncertain
+      confidence: low
+    t95:
+      direction: positive
+      confidence: medium
+  plausible_delay:
+    min_minutes: 30
+    max_minutes: 360
+  safety_notes: []
+  source: { type: expert }
+
+avt_T55:
+  stage: AVT
+  role: [control_candidate]
+  affects:
+    sulfur:
+      direction: uncertain
+      confidence: low
+  plausible_delay:
+    min_minutes: 30
+    max_minutes: 480
+  safety_notes: ["furnace outlet temperature affects cracking"]
+  source: { type: expert }
+
+avt_T33:
+  stage: AVT
+  role: [state, control_candidate]
+  affects:
+    density_15:
+      direction: positive
+      confidence: medium
+  plausible_delay:
+    min_minutes: 60
+    max_minutes: 720
+  safety_notes: []
+  source: { type: expert }
+
+# Hydrofining parameters
+u242000_T5:
+  stage: Hydrofining
+  role: [state, control_candidate]
+  affects:
+    sulfur:
+      direction: negative
+      confidence: medium
+  plausible_delay:
+    min_minutes: 10
+    max_minutes: 120
+  safety_notes: ["higher temperature improves desulfurization but affects catalyst"]
+  source: { type: expert }
+
+u242000_P8:
+  stage: Hydrofining
+  role: [state, control_candidate]
+  affects:
+    sulfur:
+      direction: negative
+      confidence: low
+  plausible_delay:
+    min_minutes: 10
+    max_minutes: 120
+  safety_notes: []
+  source: { type: expert }
+
+u242000_F15:
+  stage: Hydrofining
+  role: [control_candidate]
+  affects:
+    sulfur:
+      direction: uncertain
+      confidence: low
+  plausible_delay:
+    min_minutes: 10
+    max_minutes: 180
+  safety_notes: ["quench flow affects reactor temperature profile"]
+  source: { type: expert }
+
+# VAK formulas from Теги_хакатон.xlsx (virtual analyzer definitions)
+vak_formulas:
+  hydrofining_sulfur:
+    target: "24-2000:Mg.Sulfur"
+    formula: "W7"  # Direct online analyzer reading
+    confidence: high
+    description: "Поточный анализатор серы в гидроочищенном ДТ"
+
+  hydrofining_density:
+    target: "24-2000:D15"
+    formula: "667.881 + 0.15417*LIMS:24-2000.Pipeline.D15 + 0.00005*F22 + 0.10774*T11"
+    confidence: medium
+    description: "Расчетная плотность при 15°C"
+
+  hydrofining_t90:
+    target: "24-2000:GODT:T90"
+    formula: "162.998 + 0.12945*T12 + 59.57*F15 + 0.00036*W7 + T23*0.26366 - 424.72638*F1/F26"
+    confidence: medium
+    description: "90% перегонки ГОДТ"

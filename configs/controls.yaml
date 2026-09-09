@@ -1,0 +1,67 @@
+# Controllable variables for optimization
+# Mark each variable as control_candidate, state, or both
+
+variables:
+  # AVT unit controls
+  avt_T1:
+    description: "Температура верха К1"
+    unit: "°C"
+    role: ["state", "control_candidate"]
+    plausible_range: [100, 200]
+
+  avt_F3:
+    description: "Расход бензина на орошение К1"
+    role: ["control_candidate"]
+    plausible_range: [30, 120]
+
+  avt_F5:
+    description: "Расход пара в К1"
+    role: ["control_candidate"]
+    plausible_range: [80, 150]
+
+  avt_T6:
+    description: "Температура низ К1"
+    unit: "°C"
+    role: ["state", "control_candidate"]
+    plausible_range: [200, 260]
+
+  avt_T33:
+    description: "Температура низа К-2"
+    unit: "°C"
+    role: ["state", "control_candidate"]
+    plausible_range: [50, 90]
+
+  avt_T55:
+    description: "Температура на выходе из печи П3"
+    unit: "°C"
+    role: ["control_candidate"]
+    plausible_range: [340, 420]
+
+  # 24-2000 unit controls
+  u242000_T5:
+    description: "Реактор Р-201 температура ГСС на выходе"
+    unit: "°C"
+    role: ["state", "control_candidate"]
+    plausible_range: [340, 380]
+
+  u242000_T6:
+    description: "Поточный анализатор серы"
+    role: ["state"]
+
+  u242000_W7:
+    description: "Поточный анализатор серы в гидроочищенном ДТ"
+    role: ["state"]
+
+  u242000_P8:
+    description: "Реактор Р-202 температура ГСС на входе"
+    role: ["state", "control_candidate"]
+    plausible_range: [340, 380]
+
+  u242000_F15:
+    description: "Расход квенча в реактор Р-202"
+    role: ["control_candidate"]
+    plausible_range: [0, 200]
+
+  u242000_T23:
+    description: "Расход гидроочищенного ДТ в цех №8"
+    role: ["state"]

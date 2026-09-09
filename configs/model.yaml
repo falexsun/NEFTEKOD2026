@@ -1,0 +1,57 @@
+# ML model configuration
+target:
+  primary: "sulfur"
+  secondary: ["density_15"]
+  prediction_horizon_minutes: 60
+
+models:
+  catboost:
+    enabled: true
+    params:
+      iterations: 1000
+      learning_rate: 0.05
+      depth: 6
+      l2_leaf_reg: 3
+      random_seed: 42
+      verbose: 0
+      task_type: "CPU"
+      loss_function: "RMSE"
+
+  lightgbm:
+    enabled: true
+    params:
+      n_estimators: 1000
+      learning_rate: 0.05
+      max_depth: 6
+      reg_lambda: 1.0
+      random_state: 42
+      verbose: -1
+      n_jobs: -1
+
+  xgboost:
+    enabled: true
+    params:
+      n_estimators: 1000
+      learning_rate: 0.05
+      max_depth: 6
+      reg_lambda: 1.0
+      random_state: 42
+      verbosity: 0
+
+  naive_last_value:
+    enabled: true
+    description: "Baseline: predict last known value"
+
+  naive_mean:
+    enabled: true
+    description: "Baseline: predict rolling mean"
+
+evaluation:
+  temporal_split:
+    train_ratio: 0.7
+    val_ratio: 0.15
+    test_ratio: 0.15
+  walk_forward:
+    n_splits: 5
+    min_train_days: 90
+    test_days: 30
