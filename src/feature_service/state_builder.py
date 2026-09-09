@@ -1,4 +1,7 @@
-"""StateBuilder — constructs ProcessState from aligned data."""
+"""StateBuilder — constructs ProcessState from aligned data.
+
+PROPERLY populates SourceFreshness with real values.
+"""
 from __future__ import annotations
 
 import logging
@@ -29,9 +32,16 @@ class StateBuilder:
         density_ts: datetime | None = None,
         lims_values: dict[str, float] | None = None,
         lims_ts: datetime | None = None,
+        avt_ts: datetime | None = None,
+        u24_ts: datetime | None = None,
         decision_id: str | None = None,
     ) -> ProcessState:
-        """Build a single ProcessState from a row of aligned data."""
+        """Build a single ProcessState from a row of aligned data.
+
+        Properly computes SourceFreshness for all sources.
+        """
+        now = timestamp
+
         # Extract AVT telemetry
         avt_telemetry = {}
         for col in self.avt_cols:
@@ -46,7 +56,6 @@ class StateBuilder:
 
         # Build quality signals
         quality = {}
-        now = timestamp
 
         if sulfur_value is not None and sulfur_ts is not None:
             age = (now - sulfur_ts).total_seconds() / 60
@@ -77,11 +86,17 @@ class StateBuilder:
                         source="LIMS",
                         measurement_timestamp=lims_ts,
                         age_minutes=age,
-                        confidence=max(0.1, 1.0 - age / 1440),  # LIMS valid longer
+                        confidence=max(0.1, 1.0 - age / 1440),
                     )
 
-        # Build source freshness
-        freshness = SourceFreshness()
+        # Build source freshness — PROPERLY POPULATED
+        freshness = SourceFreshness(
+            avt_minutes=(now - avt_ts).total_seconds() / 60 if avt_ts else None,
+            unit_242000_minutes=(now - u24_ts).total_seconds() / 60 if u24_ts else None,
+            lims_minutes=(now - lims_ts).total_seconds() / 60 if lims_ts else None,
+            pak_sulfur_minutes=(now - sulfur_ts).total_seconds() / 60 if sulfur_ts else None,
+            pak_density_minutes=(now - density_ts).total_seconds() / 60 if density_ts else None,
+        )
 
         return ProcessState(
             timestamp=timestamp,
