@@ -1,0 +1,26 @@
+# Runtime configuration — thresholds not hardcoded in agents
+
+data_quality:
+  max_stale_minutes: 120
+  min_avt_signals: 10
+  min_u24_signals: 5
+  min_data_quality_score: 0.3
+  frozen_window: 6
+  frozen_std_threshold: 0.001
+  jump_threshold: 100.0
+
+quality_uncertainty:
+  method: approximate_fixed_std
+  sulfur_std: 1.5
+  description: "Approximate std from training residual analysis. NOT calibrated."
+
+reliability:
+  baseline_risk: 0.1
+  description: "Baseline risk when no envelope deviation detected — proxy assumption"
+
+safety:
+  sulfur_limit: 10.0
+  max_violation_prob: 0.2
+  max_risk_score: 0.8
+  max_ood_score: 0.8
+  min_data_quality: 0.3

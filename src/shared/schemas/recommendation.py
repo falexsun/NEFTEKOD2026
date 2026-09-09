@@ -22,7 +22,7 @@ class Recommendation(BaseModel):
     expected_energy_effect: float | None = None
     reliability_effect: float | None = None
     checked_constraints: list[str] = Field(default_factory=list)
-    confidence: float = Field(ge=0.0, le=1.0, default=0.5)
+    confidence: float | None = Field(ge=0.0, le=1.0, default=None)
     alternatives: list[dict[str, Any]] = Field(default_factory=list)
     explanation: str = ""
     model_versions: dict[str, str] = Field(default_factory=dict)

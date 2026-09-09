@@ -97,7 +97,7 @@ class OrchestratorAgent:
             )
 
         # Step 6: Safety Filtering
-        safe, unsafe = self.safety_agent.filter_scenarios(evaluations, quality_pred, dq.score)
+        safe, unsafe = self.safety_agent.filter_scenarios(evaluations, quality_pred, dq.score, state=state)
         if not safe:
             return AbstainRecommendation(
                 decision_id=decision_id, timestamp=state.timestamp,

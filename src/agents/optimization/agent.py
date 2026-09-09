@@ -1,12 +1,6 @@
-"""Optimization Agent — generates and evaluates candidate actions.
+"""Optimization Agent — no magic prediction defaults.
 
-IMPROVEMENTS:
-- Deterministic seed for reproducibility
-- Baseline scenario 'NO CHANGE' always first, contains actual current values
-- Only uses controls from ControlRegistry
-- Skips controls with no current value (no midpoint guessing)
-- Uses exact control→feature mapping for surrogate
-- Production/energy proxy returns None if semantic tags not configured
+If surrogate returns predictions without 'sulfur' or 'sulfur_std' → simulation_status="error".
 """
 from __future__ import annotations
 
@@ -23,12 +17,11 @@ logger = logging.getLogger(__name__)
 
 
 class ScenarioEvaluation(BaseModel):
-    """Evaluation of a single candidate scenario."""
     scenario_id: str
     action: dict[str, float]
-    predicted_sulfur: float
-    sulfur_std: float
-    violation_probability: float
+    predicted_sulfur: float = 0.0
+    sulfur_std: float = 0.0
+    violation_probability: float = 1.0
     production_proxy: float | None = None
     energy_proxy: float | None = None
     reliability_risk: float = 0.0
@@ -38,131 +31,79 @@ class ScenarioEvaluation(BaseModel):
 
 
 class OptimizationAgent:
-    """Generates N candidate actions using ControlRegistry.
-
-    Strategy: HARD FILTERING → LEXICOGRAPHIC RANKING
-    Priority: safety > quality > reliability > production > energy
-    """
-
-    def __init__(
-        self,
-        surrogate: SurrogateModel,
-        n_scenarios: int = 10,
-        sulfur_limit: float = 10.0,
-        seed: int = 42,
-    ):
+    def __init__(self, surrogate: SurrogateModel, n_scenarios=10, sulfur_limit=10.0, seed=42):
         self.surrogate = surrogate
         self.n_scenarios = n_scenarios
         self.sulfur_limit = sulfur_limit
         self.seed = seed
 
-    def generate_candidates(
-        self,
-        state: ProcessState,
-        controls: dict[str, tuple[float, float]],
-    ) -> list[dict[str, float]]:
-        """Generate candidate control actions.
-
-        First candidate is always NO CHANGE (current values).
-        Only includes controls that have current values in state.
-        Skips controls with no current value (no midpoint guessing).
-        """
+    def generate_candidates(self, state: ProcessState, controls: dict[str, tuple[float, float]]) -> list[dict[str, float]]:
         rng = np.random.RandomState(self.seed)
         all_signals = {**state.avt_telemetry, **state.unit_242000_telemetry}
 
-        # Build baseline: only controls that have current values
         baseline = {}
         for name in controls:
             if name in all_signals:
                 baseline[name] = all_signals[name]
-            # If control not in current state → skip (don't guess midpoint)
 
         if not baseline:
-            return [{}]  # Empty baseline — no controls available
+            return []
 
-        candidates = [dict(baseline)]  # NO CHANGE
-
+        candidates = [dict(baseline)]
         control_keys = list(baseline.keys())
 
-        for i in range(self.n_scenarios - 1):
+        for _ in range(self.n_scenarios - 1):
             candidate = dict(baseline)
-            n_perturb = rng.randint(1, max(2, len(control_keys)))
-            params = rng.choice(control_keys, size=min(n_perturb, len(control_keys)), replace=False)
-
+            n = rng.randint(1, max(2, len(control_keys)))
+            params = rng.choice(control_keys, size=min(n, len(control_keys)), replace=False)
             for param in params:
                 low, high = controls[param]
                 current = baseline[param]
-                range_size = high - low
-                if range_size <= 0:
-                    continue
-                delta = rng.uniform(-0.1, 0.1) * range_size
+                delta = rng.uniform(-0.1, 0.1) * (high - low)
                 candidate[param] = float(np.clip(current + delta, low, high))
-
             candidates.append(candidate)
 
         return candidates
 
-    def evaluate_scenarios(
-        self,
-        state: ProcessState,
-        candidates: list[dict[str, float]],
-        feature_vector: dict[str, float],
-        reliability: ReliabilityAssessment,
-    ) -> tuple[list[ScenarioEvaluation], bool]:
-        """Evaluate all candidate scenarios.
-
-        Returns (evaluations, simulation_available).
-        """
+    def evaluate_scenarios(self, state, candidates, feature_vector, reliability):
         if not self.surrogate.is_available:
-            logger.warning("Optimization Agent: surrogate unavailable")
             return [], False
 
         evaluations = []
         for i, action in enumerate(candidates):
             result: SimulationResult = self.surrogate.simulate(
-                state=state,
-                action=action,
-                horizon_minutes=60,
-                feature_vector=feature_vector,
+                state=state, action=action, horizon_minutes=60, feature_vector=feature_vector,
             )
-
             if result.status != "ok":
                 evaluations.append(ScenarioEvaluation(
-                    scenario_id=f"scenario_{i}",
-                    action=action,
-                    predicted_sulfur=0.0,
-                    sulfur_std=0.0,
-                    violation_probability=1.0,
-                    simulation_status=result.status,
+                    scenario_id=f"scenario_{i}", action=action, simulation_status=result.status,
                 ))
                 continue
 
-            pred_sulfur = result.predictions.get("sulfur", 0.0)
-            sulfur_std = result.predictions.get("sulfur_std", 5.0)
+            # No magic defaults — if keys missing, mark as error
+            if "sulfur" not in result.predictions or "sulfur_std" not in result.predictions:
+                evaluations.append(ScenarioEvaluation(
+                    scenario_id=f"scenario_{i}", action=action, simulation_status="error",
+                ))
+                continue
+
+            pred = result.predictions["sulfur"]
+            std = result.predictions["sulfur_std"]
 
             from scipy.stats import norm
-            violation_prob = float(1 - norm.cdf(self.sulfur_limit, loc=pred_sulfur, scale=sulfur_std))
+            vprob = float(1 - norm.cdf(self.sulfur_limit, loc=pred, scale=std))
 
             evaluations.append(ScenarioEvaluation(
-                scenario_id=f"scenario_{i}",
-                action=action,
-                predicted_sulfur=pred_sulfur,
-                sulfur_std=sulfur_std,
-                violation_probability=violation_prob,
-                production_proxy=None,  # No semantic proxy configured
-                energy_proxy=None,       # No semantic proxy configured
-                reliability_risk=reliability.risk_score,
-                uncertainty=sulfur_std,
-                ood_score=0.0,
+                scenario_id=f"scenario_{i}", action=action,
+                predicted_sulfur=pred, sulfur_std=std,
+                violation_probability=vprob,
+                production_proxy=None, energy_proxy=None,
+                reliability_risk=reliability.risk_score, uncertainty=std,
                 simulation_status="ok",
             ))
 
         return evaluations, True
 
-    def rank_scenarios(self, scenarios: list[ScenarioEvaluation]) -> list[ScenarioEvaluation]:
-        """Rank using lexicographic ordering. No weighted sum."""
+    def rank_scenarios(self, scenarios):
         valid = [s for s in scenarios if s.simulation_status == "ok"]
-        return sorted(
-            valid,
-            key=lambda s: (s.violation_probability, s.reliability_risk),
-        )
+        return sorted(valid, key=lambda s: (s.violation_probability, s.reliability_risk))
