@@ -1,4 +1,12 @@
-# Python base image
+FROM node:22-alpine AS frontend-build
+
+WORKDIR /frontend
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm ci
+COPY frontend/ ./
+RUN npm run build
+
+# Python runtime image
 FROM python:3.11-slim
 
 WORKDIR /app
@@ -14,6 +22,7 @@ RUN uv sync --frozen --no-dev
 
 # Copy application code
 COPY . .
+COPY --from=frontend-build /frontend/dist /app/frontend/dist
 
 # Create directories for data and models
 RUN mkdir -p data models reports

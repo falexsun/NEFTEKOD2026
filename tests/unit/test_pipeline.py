@@ -158,6 +158,13 @@ class TestQualitySourceResolver:
 # ── ControlRegistry ─────────────────────────────────────────────
 
 class TestControlRegistry:
+    def test_both_role_is_available_for_control(self):
+        reg = ControlRegistry(PROJECT_ROOT / "configs" / "controls.yaml")
+        candidates = reg.get_control_candidates()
+        assert "avt_T1" in candidates
+        assert "u24_T5" in candidates
+        assert len(candidates) == 9
+
     def test_max_step_rejects(self):
         reg = ControlRegistry(PROJECT_ROOT / "configs" / "controls.yaml")
         valid, v = reg.validate_control_value("avt_T1", 150.0, current=130.0)

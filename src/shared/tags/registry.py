@@ -1,7 +1,7 @@
 """Control Registry — reads configs/controls.yaml and provides ControlSpec objects.
 
 Optimizer works ONLY through ControlRegistry.
-Only tags with role=control_candidate can be modified by optimizer.
+Only tags with role=control_candidate or role=both can be modified by optimizer.
 """
 from __future__ import annotations
 
@@ -62,12 +62,12 @@ class ControlRegistry:
                 confidence=spec.get("confidence", "low"),
             )
 
-        n_controls = sum(1 for c in self.controls.values() if "control" in c.role)
+        n_controls = sum(1 for c in self.controls.values() if c.role in ("control_candidate", "both"))
         logger.info(f"ControlRegistry loaded {len(self.controls)} variables, {n_controls} control candidates")
 
     def get_control_candidates(self) -> dict[str, ControlSpec]:
         """Return only variables that are control candidates."""
-        return {k: v for k, v in self.controls.items() if "control" in v.role}
+        return {k: v for k, v in self.controls.items() if v.role in ("control_candidate", "both")}
 
     def get_optimization_bounds(self) -> dict[str, tuple[float, float]]:
         """Return bounds for optimizer: only control_candidates with ranges."""

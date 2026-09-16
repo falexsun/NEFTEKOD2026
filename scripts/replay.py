@@ -8,6 +8,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 import sys
 import time
 import uuid
@@ -15,6 +16,7 @@ from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
+import httpx
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
@@ -29,7 +31,11 @@ def main():
     parser.add_argument("--end", required=True, help="End timestamp (YYYY-MM-DD HH:MM)")
     parser.add_argument("--speed", type=float, default=1.0, help="Speed multiplier (100 = 100x realtime)")
     parser.add_argument("--redis-url", default="redis://localhost:6379", help="Redis URL")
-    parser.add_argument("--data-dir", default=str(PROJECT_ROOT / "data"), help="Data directory")
+    parser.add_argument("--api-url", help="Send Q21 directly to this API instead of Redis")
+    parser.add_argument("--api-key", default=os.environ.get("NEFTEKOD_ENGINEER_API_KEY"),
+                        help="Engineer API key (defaults to NEFTEKOD_ENGINEER_API_KEY)")
+    default_data = PROJECT_ROOT.parent / "data" if (PROJECT_ROOT.parent / "data").exists() else PROJECT_ROOT / "data"
+    parser.add_argument("--data-dir", default=str(default_data), help="Data directory")
     parser.add_argument("--dry-run", action="store_true", help="Print events without sending to Redis")
     args = parser.parse_args()
 
@@ -67,7 +73,12 @@ def main():
 
     # Connect to Redis
     redis_client = None
-    if not args.dry_run:
+    api_client = None
+    if args.api_url and not args.dry_run:
+        headers = {"X-API-Key": args.api_key} if args.api_key else {}
+        api_client = httpx.Client(base_url=args.api_url.rstrip("/"), headers=headers, timeout=30)
+        logger.info("Direct Q21 API destination: %s", args.api_url)
+    elif not args.dry_run:
         try:
             import redis
             redis_client = redis.from_url(args.redis_url)
@@ -109,8 +120,27 @@ def main():
                 if pd.notna(row[col])
             }
 
-        # Publish to Redis or print
-        if redis_client:
+        # Publish to API, Redis, or print.
+        if api_client and "unit_242000_telemetry" in payload:
+            values = payload["unit_242000_telemetry"]
+            if "Q21" not in values:
+                logger.warning("Skipping %s: Q21 is absent", ts)
+                continue
+            q21_payload = {
+                "timestamp": payload["source_timestamp"], "q21": values["Q21"],
+                "operating_mode": "normal",
+                "ingestion_mode": "replay",
+                "values": {
+                    **{key: value for key, value in values.items() if key != "Q21"},
+                    **{key: value for key, value in payload.get("avt_telemetry", {}).items()
+                       if key in {"F31", "T33", "T55"}},
+                },
+            }
+            response = api_client.post("/q21/telemetry", json=q21_payload,
+                                       headers={"X-Request-ID": f"replay-{ts.isoformat()}"})
+            if response.status_code != 409:
+                response.raise_for_status()
+        elif redis_client:
             try:
                 redis_client.xadd("telemetry.received", {"data": json.dumps(payload)})
             except Exception as e:

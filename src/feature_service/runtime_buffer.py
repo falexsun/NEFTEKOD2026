@@ -5,8 +5,9 @@ Stores history, builds full model schema, checks readiness by duration + coverag
 from __future__ import annotations
 
 import logging
+import threading
 from collections import deque
-from datetime import datetime
+from datetime import datetime, timezone
 
 import numpy as np
 import pandas as pd
@@ -28,17 +29,20 @@ class RuntimeFeatureBuffer:
         self._history: deque[dict] = deque(maxlen=max_history)
         self._df: pd.DataFrame | None = None
         self._transformer = FeatureTransformer()
+        self._lock = threading.RLock()
 
     @property
     def history_size(self) -> int:
-        return len(self._history)
+        with self._lock:
+            return len(self._history)
 
     @property
     def history_duration_minutes(self) -> float:
-        if len(self._history) < 2:
-            return 0.0
-        first = self._history[0].get("timestamp")
-        last = self._history[-1].get("timestamp")
+        with self._lock:
+            if len(self._history) < 2:
+                return 0.0
+            first = self._history[0].get("timestamp")
+            last = self._history[-1].get("timestamp")
         if first and last:
             return (last - first).total_seconds() / 60
         return 0.0
@@ -51,7 +55,10 @@ class RuntimeFeatureBuffer:
 
     def push(self, timestamp: datetime, avt: dict[str, float], u24: dict[str, float],
              pak_sulfur: float | None = None, pak_density: float | None = None,
-             lims: dict[str, float] | None = None):
+             lims: dict[str, float] | None = None) -> bool:
+        """Append a point once; reject out-of-order or duplicate timestamps."""
+        if timestamp.tzinfo is None:
+            timestamp = timestamp.replace(tzinfo=timezone.utc)
         row = {"timestamp": timestamp}
         row.update(avt)
         row.update(u24)
@@ -62,8 +69,35 @@ class RuntimeFeatureBuffer:
         if lims:
             for k, v in lims.items():
                 row[f"lims_{k}"] = v
-        self._history.append(row)
-        self._df = None
+        with self._lock:
+            if self._history and timestamp <= self._history[-1]["timestamp"]:
+                logger.warning("Rejected non-monotonic telemetry point: %s", timestamp)
+                return False
+            self._history.append(row)
+            self._df = None
+        return True
+
+    def restore(self, rows: list[dict]) -> int:
+        """Restore persisted points on startup without duplicating them."""
+        restored = 0
+        for row in sorted(rows, key=lambda item: item["timestamp"]):
+            payload = dict(row)
+            timestamp = payload.pop("timestamp")
+            avt = {k: v for k, v in payload.items() if k.startswith("avt_")}
+            u24 = {k: v for k, v in payload.items() if k.startswith("u24_")}
+            lims = {k[5:]: v for k, v in payload.items() if k.startswith("lims_")}
+            restored += int(self.push(timestamp, avt, u24, payload.get("sulfur_mg_kg"), payload.get("density_15"), lims))
+        return restored
+
+    @property
+    def latest(self) -> dict | None:
+        with self._lock:
+            return dict(self._history[-1]) if self._history else None
+
+    def reset(self) -> None:
+        with self._lock:
+            self._history.clear()
+            self._df = None
 
     def build_feature_vector(self, expected_features: list[str]) -> tuple[dict[str, float] | None, str | None]:
         """Build feature vector using shared FeatureTransformer."""
@@ -98,7 +132,9 @@ class RuntimeFeatureBuffer:
             return self._df
         if not self._history:
             return None
-        df = pd.DataFrame(list(self._history))
+        with self._lock:
+            rows = list(self._history)
+        df = pd.DataFrame(rows)
         df["timestamp"] = pd.to_datetime(df["timestamp"])
         df = df.set_index("timestamp").sort_index()
         self._df = df

@@ -1,0 +1,51 @@
+groups:
+  - name: neftekod-runtime
+    rules:
+      - alert: NefteKodApiDown
+        expr: up{job="neftekod-api"} == 0
+        for: 1m
+        labels: { severity: critical }
+        annotations:
+          summary: "API Нефтекод недоступен"
+          description: "Prometheus не может опросить gateway более минуты."
+      - alert: NefteKodModelUnavailable
+        expr: neftekod_quality_model_ready == 0
+        for: 5m
+        labels: { severity: warning }
+        annotations:
+          summary: "Модель качества недоступна"
+          description: "Рекомендации и прогнозы должны быть заблокированы."
+      - alert: NefteKodSurrogateUnavailable
+        expr: neftekod_surrogate_ready == 0
+        for: 5m
+        labels: { severity: warning }
+        annotations:
+          summary: "What-if модель недоступна"
+          description: "Расчёт операторских сценариев заблокирован."
+      - alert: NefteKodBufferStalled
+        expr: changes(neftekod_feature_buffer_points[20m]) == 0
+        for: 20m
+        labels: { severity: warning }
+        annotations:
+          summary: "Буфер признаков не обновляется"
+          description: "За последние 20 минут не поступило новых точек."
+      - alert: NefteKodSourceStale
+        expr: neftekod_source_age_minutes{source=~"pak|avt|u24"} > 30
+        for: 5m
+        labels: { severity: critical }
+        annotations:
+          summary: "Оперативный источник устарел"
+          description: "Возраст данных {{ $labels.source }} превышает 30 минут."
+      - alert: NefteKodAbstainSpike
+        expr: increase(neftekod_decisions_total{type="abstain"}[30m]) >= 3
+        labels: { severity: warning }
+        annotations:
+          summary: "Серия отказов от рекомендаций"
+          description: "За 30 минут произошло не менее трёх безопасных отказов."
+      - alert: NefteKodApiErrors
+        expr: sum(rate(neftekod_http_requests_total{status=~"5.."}[5m])) > 0.05
+        for: 5m
+        labels: { severity: warning }
+        annotations:
+          summary: "Повышенный уровень ошибок API"
+          description: "Частота ответов 5xx превышает допустимый порог."
