@@ -322,14 +322,14 @@ neftekod_q21_shadow_coverage_2h
 ### Автоматические тесты
 
 ```bash
-# 1. Проверка структуры кода (20 модулей)
-./scripts/check_structure.sh
+# 1. Проверка структуры кода
+./project/scripts/check_structure.sh
 
 # 2. Проверка Python импортов (17 модулей)
-uv run python scripts/test_imports.py
+uv run --project project python project/scripts/test_imports.py
 
 # 3. Полное системное тестирование (25+ проверок)
-./scripts/test_system.sh
+./project/scripts/test_system.sh
 ```
 
 ---
@@ -338,10 +338,9 @@ uv run python scripts/test_imports.py
 
 ### Основные документы
 
-- [README_FINALE.md](../README_FINALE.md) — полное руководство
-- [PRESENTATION_GUIDE.md](../PRESENTATION_GUIDE.md) — сценарий презентации
-- [CREDENTIALS.md](../CREDENTIALS.md) — учетные данные
-- [WINNING_FEATURES.md](../WINNING_FEATURES.md) — описание фич
+- [README проекта](project/README.md) — архитектура и запуск приложения
+- [Справочник тегов](docs/neftekod_tag_descriptions.md) — параметры установки
+- [EDA](eda/README.md) — исследование данных и результаты экспериментов
 
 ### API документация
 
