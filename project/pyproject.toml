@@ -1,0 +1,30 @@
+[project]
+name = "neftekod-hackathon"
+version = "0.1.0"
+description = "Multi-agent diesel fuel quality control system (АВТ → Гидроочистка → Блендинг)"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "catboost>=1.2.10",
+    "fastapi>=0.141.1",
+    "httpx>=0.28.1",
+    "lightgbm>=4.7.0",
+    "mlflow>=3.16.0",
+    "numpy>=2.4.6",
+    "openpyxl>=3.1.5",
+    "pandas>=3.0.5",
+    "plotly>=7.0.0",
+    "prometheus-client>=0.22.1",
+    "pyarrow>=25.0.1",
+    "pydantic>=2.13.5",
+    "pytest>=9.1.1",
+    "redis>=8.1.0",
+    "scikit-learn>=1.9.0",
+    "scipy>=1.17.1",
+    "streamlit>=1.63.0",
+    "uvicorn>=0.52.4",
+    "xgboost>=3.2.0",
+    "pyyaml>=6.0.3",
+    "sqlalchemy>=2.0.43",
+    "psycopg[binary]>=3.2.10",
+]

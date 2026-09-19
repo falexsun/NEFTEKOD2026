@@ -1,0 +1,35 @@
+# Process constraints — derived from domain knowledge + data analysis
+# These are NOT industrial limits unless confirmed by domain expert
+
+sulfur:
+  hard_max: 10.0
+  unit: "mg/kg"
+  source: "GOST R 52368-2005"
+
+density_15:
+  min: 820.0
+  max: 845.0
+  unit: "kg/m3"
+  source: "GOST R 52368-2005"
+
+t95:
+  max: 360.0
+  unit: "°C"
+  source: "GOST R 52368-2005"
+
+flash_point:
+  min: 55.0
+  unit: "°C"
+  source: "GOST R 52368-2005"
+
+# Rate-of-change constraints for process variables
+rate_of_change_limits:
+  temperature:
+    max_change_per_10min: 5.0
+    unit: "°C"
+  flow:
+    max_change_per_10min: 50.0
+    unit: "%"
+  pressure:
+    max_change_per_10min: 0.5
+    unit: "kgf/cm2"

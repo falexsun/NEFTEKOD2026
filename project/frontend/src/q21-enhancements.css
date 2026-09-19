@@ -1,0 +1,109 @@
+/* Q21 Alert Banner */
+.q21-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  margin: 1rem 0;
+  border-radius: 8px;
+  border-left: 4px solid;
+  animation: slideIn 0.3s ease-out;
+}
+
+.q21-alert.warning {
+  background: rgba(255, 193, 7, 0.1);
+  border-color: var(--amber);
+  color: var(--amber);
+}
+
+.q21-alert.critical {
+  background: rgba(220, 53, 69, 0.1);
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.q21-alert svg {
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+}
+
+.q21-alert strong {
+  display: block;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.q21-alert p {
+  margin: 0.25rem 0;
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+.q21-alert .action-hint {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid currentColor;
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+.change-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+
+.change-indicator.increasing {
+  background: rgba(220, 53, 69, 0.15);
+  color: var(--red);
+}
+
+.change-indicator.decreasing {
+  background: rgba(40, 167, 69, 0.15);
+  color: var(--green);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Q21 Shadow Summary improvements */
+.q21-shadow-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  margin-top: 1rem;
+}
+
+.q21-shadow-summary > span {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--fg-secondary);
+}
+
+.q21-shadow-summary b {
+  color: var(--fg-primary);
+  font-weight: 600;
+}
+
+.q21-shadow-summary small {
+  font-size: 0.85em;
+  opacity: 0.8;
+}

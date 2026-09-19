@@ -1,0 +1,9 @@
+.git
+.venv
+.pytest_cache
+**/__pycache__
+frontend/node_modules
+catboost_info
+mlruns
+*.log
+.DS_Store

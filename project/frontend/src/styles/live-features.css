@@ -1,0 +1,243 @@
+/* Timeline styles */
+.timeline-panel {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.timeline-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.timeline-event {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 6px;
+  border-left: 3px solid;
+  background: rgba(255, 255, 255, 0.02);
+  transition: all 0.2s;
+}
+
+.timeline-event:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.timeline-event.event-critical {
+  border-color: var(--red);
+  background: rgba(220, 53, 69, 0.05);
+}
+
+.timeline-event.event-warning {
+  border-color: var(--amber);
+  background: rgba(255, 193, 7, 0.05);
+}
+
+.timeline-event.event-info {
+  border-color: var(--blue);
+  background: rgba(13, 110, 253, 0.05);
+}
+
+.event-icon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.event-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.event-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.event-header strong {
+  font-size: 0.95rem;
+}
+
+.event-time {
+  font-size: 0.85rem;
+  color: var(--fg-secondary);
+  white-space: nowrap;
+}
+
+.event-description {
+  font-size: 0.9rem;
+  color: var(--fg-secondary);
+  margin: 0;
+}
+
+.event-data {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.6rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.change-up {
+  color: var(--red);
+  margin-left: 0.5rem;
+  font-weight: 600;
+}
+
+.change-down {
+  color: var(--green);
+  margin-left: 0.5rem;
+  font-weight: 600;
+}
+
+.timeline-empty {
+  padding: 2rem;
+  text-align: center;
+  color: var(--fg-secondary);
+}
+
+/* Alert Banner styles */
+.alert-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 400px;
+}
+
+.alert-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid;
+  background: var(--bg-secondary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.alert-critical {
+  border-color: var(--red);
+  background: rgba(220, 53, 69, 0.15);
+}
+
+.alert-warning {
+  border-color: var(--amber);
+  background: rgba(255, 193, 7, 0.15);
+}
+
+.alert-info {
+  border-color: var(--blue);
+  background: rgba(13, 110, 253, 0.15);
+}
+
+.alert-icon {
+  flex-shrink: 0;
+}
+
+.alert-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.alert-content strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+}
+
+.alert-content p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.alert-close {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.alert-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* WebSocket connection indicator */
+.ws-indicator {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  z-index: 999;
+}
+
+.ws-indicator.connected {
+  color: var(--green);
+}
+
+.ws-indicator.disconnected {
+  color: var(--red);
+}
+
+.ws-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.ws-indicator.connected .ws-dot {
+  background: var(--green);
+}
+
+.ws-indicator.disconnected .ws-dot {
+  background: var(--red);
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}

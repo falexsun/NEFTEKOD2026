@@ -1,0 +1,21 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+data/*.db
+.DS_Store
+__pycache__/
+*.py[cod]
+*.tsbuildinfo
+catboost_info/
+mlflow.log
+frontend/node_modules/
+frontend/dist/
+frontend/vite.config.js
+frontend/vite.config.d.ts
+
+# Virtual environments
+.venv

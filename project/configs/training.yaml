@@ -1,0 +1,17 @@
+# Training configuration
+buffer:
+  min_samples: 100
+  max_samples: 50000
+  trigger_threshold: 50
+
+retrain:
+  check_interval_hours: 24
+  min_new_samples: 20
+  champion_comparison_metric: "rmse"
+
+promotion:
+  min_improvement_pct: 2.0
+  require_temporal_backtest: true
+  max_allowed_violation_increase: 0.0
+
+random_seed: 42

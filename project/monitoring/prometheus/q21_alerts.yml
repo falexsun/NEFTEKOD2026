@@ -1,0 +1,118 @@
+# Алерты Q21 Shadow Pipeline
+groups:
+  - name: q21_shadow_alerts
+    interval: 30s
+    rules:
+      # Критические алерты
+      - alert: Q21ExceedsLimit
+        expr: neftekod_q21_current_ppm >= 10
+        for: 5m
+        labels:
+          severity: critical
+          component: q21
+        annotations:
+          summary: "Q21 превысил предел 10 ppm"
+          description: "Текущее значение Q21: {{ $value }} ppm. Требуется проверка анализатора и технологического режима."
+
+      - alert: Q21DataStreamStopped
+        expr: (time() - neftekod_q21_data_freshness_minutes * 60) > 1800
+        for: 10m
+        labels:
+          severity: critical
+          component: q21
+        annotations:
+          summary: "Поток данных Q21 остановлен"
+          description: "Последняя точка Q21 была {{ $value }} секунд назад. Проверьте подключение к источнику данных."
+
+      - alert: Q21ShadowMAEHigh
+        expr: neftekod_q21_shadow_mae_ppm > 3.0
+        for: 30m
+        labels:
+          severity: warning
+          component: q21
+        annotations:
+          summary: "MAE прогноза Q21 превышает 3.0 ppm"
+          description: "Текущий MAE: {{ $value }} ppm. Модель может требовать переобучения или данные изменили распределение."
+
+      - alert: Q21CoverageDropped
+        expr: neftekod_q21_shadow_coverage < 0.5
+        for: 1h
+        labels:
+          severity: warning
+          component: q21
+        annotations:
+          summary: "Coverage прогнозов Q21 упал ниже 50%"
+          description: "Текущий coverage: {{ $value }}. Большое количество прогнозов не закрывается фактическими значениями."
+
+      - alert: Q21HighExceedanceProbability
+        expr: neftekod_q21_exceedance_probability > 0.7
+        for: 15m
+        labels:
+          severity: warning
+          component: q21
+        annotations:
+          summary: "Высокая вероятность превышения Q21"
+          description: "Вероятность превышения 10 ppm: {{ $value | humanizePercentage }}. Рекомендуется проверить режим установки."
+
+      - alert: Q21BufferNotWarmedUp
+        expr: neftekod_q21_buffer_points < 145
+        for: 2h
+        labels:
+          severity: info
+          component: q21
+        annotations:
+          summary: "Буфер Q21 не прогрет"
+          description: "В буфере {{ $value }} точек из требуемых 145. Shadow inference не активен."
+
+      # Операционные алерты
+      - alert: Q21TooManyNoActions
+        expr: increase(neftekod_q21_shadow_no_action_count[1h]) > 20
+        labels:
+          severity: info
+          component: q21
+        annotations:
+          summary: "Слишком много NO_ACTION рекомендаций"
+          description: "За последний час: {{ $value }} NO_ACTION. Возможно, модель не уверена или данные некорректны."
+
+      - alert: Q21ShadowPipelineDown
+        expr: neftekod_q21_shadow_ready == 0
+        for: 5m
+        labels:
+          severity: critical
+          component: q21
+        annotations:
+          summary: "Q21 Shadow Pipeline недоступен"
+          description: "Модели Q21 не загружены или артефакты повреждены. Проверьте логи gateway."
+
+  - name: system_health
+    interval: 30s
+    rules:
+      - alert: NeftekodAPIDown
+        expr: up{job="neftekod-api"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: api
+        annotations:
+          summary: "Neftekod API недоступен"
+          description: "Gateway не отвечает на health checks. Проверьте контейнер и логи."
+
+      - alert: NeftekodHighErrorRate
+        expr: sum(rate(neftekod_http_requests_total{status=~"5.."}[5m])) / sum(rate(neftekod_http_requests_total[5m])) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+          component: api
+        annotations:
+          summary: "Высокий процент ошибок API"
+          description: "{{ $value | humanizePercentage }} запросов возвращают 5xx. Проверьте логи на ошибки."
+
+      - alert: NeftekodSlowResponses
+        expr: histogram_quantile(0.95, sum by (le, route) (rate(neftekod_http_request_duration_seconds_bucket[5m]))) > 5
+        for: 10m
+        labels:
+          severity: warning
+          component: api
+        annotations:
+          summary: "Медленные ответы API"
+          description: "P95 время ответа {{ $labels.route }}: {{ $value }}s. Возможно перегрузка или проблемы с БД."

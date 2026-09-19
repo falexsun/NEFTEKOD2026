@@ -30,8 +30,10 @@ git clone https://github.com/falexsun/NEFTEKOD2026.git
 ### Действия:
 1. Удалён вложенный `.git` из `project/`
 2. `project/` удалена из индекса как submodule
-3. `project/` добавлена как обычная папка с файлами
-4. Все файлы закоммичены и запушены
+3. `project/` добавлена как обычная папка с исходниками, конфигурациями,
+   интерфейсом, тестами и моделями Q21.
+4. Локальная база данных, зависимости, логи и реальные технологические CSV
+   остаются вне репозитория. Для них есть `project/data/README.md`.
 
 ### Теперь:
 ```
@@ -43,7 +45,7 @@ main ветка:
       ├── frontend/
       ├── scripts/
       ├── docker-compose.yml
-      └── ... все файлы!
+      └── ... исходный код и модели Q21
 
 При выполнении:
 git clone https://github.com/falexsun/NEFTEKOD2026.git
@@ -51,8 +53,9 @@ git clone https://github.com/falexsun/NEFTEKOD2026.git
 Результат:
 ✅ README.md - есть
 ✅ LICENSE - есть  
-✅ project/ - ПОЛНАЯ со всеми файлами!
-✅ Можно сразу запускать: cd project && ./scripts/start_demo.sh
+✅ project/ - содержит исходники, конфигурации, интерфейс, тесты и модели Q21.
+✅ Исходники доступны после клонирования без `git submodule update`.
+⚠ Для replay и обучения нужны отдельно предоставленные технологические данные.
 ```
 
 ---
@@ -61,14 +64,11 @@ git clone https://github.com/falexsun/NEFTEKOD2026.git
 
 ### Тест клонирования:
 ```bash
-# Удалите старую копию (если есть)
-rm -rf /tmp/test-clone
-
-# Клонируйте заново
-git clone https://github.com/falexsun/NEFTEKOD2026.git /tmp/test-clone
+# Клонируйте в новый каталог
+git clone https://github.com/falexsun/NEFTEKOD2026.git /tmp/neftekod-check
 
 # Проверьте структуру
-ls -la /tmp/test-clone/project/
+ls -la /tmp/neftekod-check/project/
 
 # Должны увидеть:
 # src/
@@ -76,15 +76,15 @@ ls -la /tmp/test-clone/project/
 # scripts/
 # docker-compose.yml
 # README.md
-# ... все файлы проекта
+# ... исходники и модели (без реальных данных)
 ```
 
 ### Быстрый тест запуска:
 ```bash
-cd /tmp/test-clone/project
+cd /tmp/neftekod-check/project
 ./scripts/start_demo.sh
 
-# Должно работать!
+# Для потоков с реальными данными сначала подключите источники данных.
 ```
 
 ---
@@ -119,6 +119,6 @@ cd NEFTEKOD2026/project
 ./scripts/start_demo.sh
 ```
 
-И всё заработает! 🚀
+Для работы с реальными потоками потребуется отдельно подключить исходные данные.
 
 **Ссылка для жюри:** https://github.com/falexsun/NEFTEKOD2026

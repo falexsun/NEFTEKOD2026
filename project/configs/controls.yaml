@@ -1,0 +1,133 @@
+# Controllable variables — canonical tag format: {source}_{raw_name}
+# Role: state | control_candidate | both
+# model_range: plausible operating range (NOT industrial limits unless confirmed)
+# source: expert | data | standard
+
+variables:
+  # ── AVT Unit ──────────────────────────────────────────────
+  avt_T1:
+    description: "Температура верха К1"
+    unit: "°C"
+    stage: AVT
+    role: ["both"]
+    plausible_range: [100, 200]
+    max_step: 5.0
+    source: expert
+    confidence: low
+
+  avt_F3:
+    description: "Расход бензина на орошение К1"
+    unit: "m3/h"
+    stage: AVT
+    role: ["control_candidate"]
+    plausible_range: [30, 120]
+    max_step: 10.0
+    source: expert
+    confidence: low
+
+  avt_F5:
+    description: "Расход пара в К1"
+    unit: "t/h"
+    stage: AVT
+    role: ["control_candidate"]
+    plausible_range: [80, 150]
+    max_step: 10.0
+    source: expert
+    confidence: low
+
+  avt_T6:
+    description: "Температура низ К1"
+    unit: "°C"
+    stage: AVT
+    role: ["both"]
+    plausible_range: [200, 260]
+    max_step: 5.0
+    source: expert
+    confidence: medium
+
+  avt_T33:
+    description: "Температура низа К-2"
+    unit: "°C"
+    stage: AVT
+    role: ["both"]
+    plausible_range: [50, 90]
+    max_step: 3.0
+    source: expert
+    confidence: low
+
+  avt_T55:
+    description: "Температура на выходе из печи П3"
+    unit: "°C"
+    stage: AVT
+    role: ["control_candidate"]
+    plausible_range: [340, 420]
+    max_step: 10.0
+    source: expert
+    confidence: low
+
+  # ── 24-2000 Unit (Hydrofining) ────────────────────────────
+  u24_T5:
+    description: "Реактор Р-201 температура ГСС на выходе"
+    unit: "°C"
+    stage: Hydrofining
+    role: ["both"]
+    plausible_range: [340, 380]
+    max_step: 5.0
+    source: expert
+    confidence: medium
+
+  u24_T6:
+    description: "Поточный анализатор серы в ДТ"
+    unit: "mg/kg"
+    stage: Hydrofining
+    role: ["state"]
+
+  u24_W7:
+    description: "Поточный анализатор содержания серы в гидроочищенном ДТ"
+    unit: "mg/kg"
+    stage: Hydrofining
+    role: ["state"]
+
+  u24_P8:
+    description: "Реактор Р-202 температура ГСС на входе"
+    unit: "°C"
+    stage: Hydrofining
+    role: ["both"]
+    plausible_range: [340, 380]
+    max_step: 5.0
+    source: expert
+    confidence: low
+
+  u24_F15:
+    description: "Расход квенча в реактор Р-202"
+    unit: "t/h"
+    stage: Hydrofining
+    role: ["control_candidate"]
+    plausible_range: [0, 200]
+    max_step: 20.0
+    source: expert
+    confidence: low
+
+  u24_T11:
+    description: "Расход сырья на установку (массовый)"
+    unit: "t/h"
+    stage: Hydrofining
+    role: ["state"]
+
+  u24_T16:
+    description: "Температура стабильного гидрогенизата низ К-201"
+    unit: "°C"
+    stage: Hydrofining
+    role: ["state"]
+
+  u24_T23:
+    description: "Расход гидроочищенного ДТ в цех №8"
+    unit: "t/h"
+    stage: Hydrofining
+    role: ["state"]
+
+  u24_P24:
+    description: "Расход свежего ВСГ с КЦА на установку"
+    unit: "t/h"
+    stage: Hydrofining
+    role: ["state"]

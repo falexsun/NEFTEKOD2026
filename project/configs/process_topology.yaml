@@ -1,0 +1,46 @@
+version: 1
+provenance: diagram_manual_annotation
+scope: AVT
+industrial_limits_confirmed: false
+sources:
+  k10: doc00628320260914104432.pdf
+  k2: doc00628420260914104535.pdf
+  k1: doc00628520260914104632.pdf
+tags:
+  avt_T1: {equipment: К-1, stream: Верх колонны, diagram: k1}
+  avt_P2: {equipment: К-1, stream: Верх колонны, diagram: k1}
+  avt_F3: {equipment: К-1, stream: Орошение из Е-1, diagram: k1}
+  avt_F5: {equipment: К-1, stream: Подача пара, diagram: k1}
+  avt_T6: {equipment: К-1, stream: Низ колонны / циркуляция через П-1/1, diagram: k1}
+  avt_F7: {equipment: ЭЛОУ → К-1, stream: Нижняя линия подачи нефти, diagram: k1}
+  avt_F8: {equipment: ЭЛОУ → К-1, stream: Верхняя линия подачи нефти, diagram: k1}
+  avt_F9: {equipment: ЭЛОУ → К-1, stream: Средняя линия подачи нефти, diagram: k1}
+  avt_P22: {equipment: К-2, stream: Верх колонны, diagram: k2}
+  avt_T13: {equipment: К-2, stream: Первое циркуляционное орошение, diagram: k2}
+  avt_F25: {equipment: К-6, stream: Бензин / фракция 120–180 °C, diagram: k2}
+  avt_F34: {equipment: К-7, stream: Керосин / фракция 150–250 °C, diagram: k2}
+  avt_F32:
+    equipment: К-9
+    stream: Боковой отбор дизельной фракции
+    diagram: k2
+    review_note: 'Расхождение: схема 240–350 °C; справочник 240–290 °C. Границы требуют уточнения.'
+  avt_F30: {equipment: К-2 / К-9, stream: Линия ДТ с подписью W70, diagram: k2, review_note: Единицы расхода и соответствие конечному продукту не подтверждены.}
+  avt_W70: {equipment: К-2 / К-9, stream: Линия ДТ с подписью F30, diagram: k2, review_note: Ручная подпись; единицы массового расхода требуют подтверждения.}
+  avt_F29: {equipment: К-2, stream: Подача пара в нижнюю часть, diagram: k2}
+  avt_F65: {equipment: П-1/2 и П-1/3 → К-2, stream: Нагретая отбензиненная нефть, diagram: k2}
+  avt_T33:
+    equipment: К-2
+    stream: Низ колонны / мазут
+    diagram: k2
+    review_note: 'Схема подтверждает место измерения, но не диапазон 50–90 °C из controls.yaml. Требуется проверка масштаба и диапазона.'
+  avt_T55: {equipment: П-3 → К-10, stream: Нагретый мазут, diagram: k10}
+  avt_F35: {equipment: К-10, stream: Верхнее циркуляционное орошение, diagram: k10}
+  avt_F36: {equipment: К-10, stream: Линия циркуляционного орошения, diagram: k10}
+  avt_F59:
+    equipment: К-10
+    stream: Вакуумный дистиллят после теплообменников
+    diagram: k10
+    review_note: 'Расхождение: схема 350–560 °C; справочник F59 420–500 °C. Отдельные линии F59/F60 не разрешены однозначно.'
+  avt_F60: {equipment: К-10, stream: Вакуумный дистиллят / фракция 350–560 °C, diagram: k10}
+  avt_F68: {equipment: К-10, stream: Гудрон после теплообменников, diagram: k10}
+  avt_F69: {equipment: К-10, stream: Параллельная линия гудрона, diagram: k10}

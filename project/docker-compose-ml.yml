@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.10.2
+    container_name: neftekod-mlflow
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./mlruns:/mlflow/mlruns
+      - ./mlartifacts:/mlflow/mlartifacts
+    environment:
+      - MLFLOW_BACKEND_STORE_URI=file:///mlflow/mlruns
+      - MLFLOW_DEFAULT_ARTIFACT_ROOT=file:///mlflow/mlartifacts
+    command: mlflow server --host 0.0.0.0 --port 5000
+    restart: unless-stopped
+    networks:
+      - neftekod-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: neftekod-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    networks:
+      - neftekod-network
+
+networks:
+  neftekod-network:
+    driver: bridge
+
+volumes:
+  redis-data:

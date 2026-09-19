@@ -1,0 +1,164 @@
+services:
+  # ── Infrastructure ────────────────────────────────────────────
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: neftekod
+      POSTGRES_USER: neftekod
+      POSTGRES_PASSWORD: neftekod
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U neftekod"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "127.0.0.1:6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # ── Application Services ──────────────────────────────────────
+  gateway:
+    build: .
+    command: uv run uvicorn src.api.app:app --host 0.0.0.0 --port 8000
+    ports:
+      - "${NEFTEKOD_GATEWAY_PORT:-8000}:8000"
+    volumes:
+      - ./data:/app/data:ro
+      - ./models:/app/models:ro
+      - ./configs:/app/configs:ro
+    environment:
+      MODEL_DIR: /app/models
+      CONFIG_DIR: /app/configs
+      DATABASE_URL: postgresql+psycopg://neftekod:neftekod@postgres:5432/neftekod
+      NEFTEKOD_AUTH_ENABLED: ${NEFTEKOD_AUTH_ENABLED:-false}
+      NEFTEKOD_OPERATOR_API_KEY: ${NEFTEKOD_OPERATOR_API_KEY:-}
+      NEFTEKOD_ENGINEER_API_KEY: ${NEFTEKOD_ENGINEER_API_KEY:-}
+      NEFTEKOD_ADMIN_API_KEY: ${NEFTEKOD_ADMIN_API_KEY:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  q21-stream-worker:
+    build: .
+    command: uv run python scripts/q21_stream_worker.py
+    restart: unless-stopped
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      NEFTEKOD_API_URL: http://gateway:8000
+      NEFTEKOD_ENGINEER_API_KEY: ${NEFTEKOD_ENGINEER_API_KEY:-}
+      Q21_SOURCE_STREAM: telemetry.received
+      Q21_CONSUMER_GROUP: q21-shadow
+      Q21_CONSUMER_NAME: ${Q21_CONSUMER_NAME:-q21-worker-1}
+    depends_on:
+      redis:
+        condition: service_healthy
+      gateway:
+        condition: service_healthy
+
+  # ── Optional: Training (disabled by default) ──────────────────
+  trainer:
+    build: .
+    command: echo "Trainer disabled in current runtime phase"
+    profiles:
+      - training
+    volumes:
+      - ./data:/app/data:ro
+      - ./models:/app/models
+      - ./reports:/app/reports
+
+  # ── Optional: Monitoring ──────────────────────────────────────
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.16.0
+    command: mlflow server --host 0.0.0.0 --port 5000 --backend-store-uri sqlite:///mlflow.db --default-artifact-root /mlflow/artifacts
+    ports:
+      - "5000:5000"
+    profiles:
+      - monitoring
+    volumes:
+      - mlfdata:/mlflow
+
+  minio:
+    image: minio/minio:RELEASE.2024-09-22T00-33-43Z
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "127.0.0.1:9000:9000"
+      - "127.0.0.1:9001:9001"
+    profiles:
+      - monitoring
+    volumes:
+      - miniodata:/data
+
+  prometheus:
+    image: prom/prometheus:v2.55.1
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=30d
+    ports:
+      - "127.0.0.1:9090:9090"
+    profiles:
+      - monitoring
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/prometheus/alerts.yml:/etc/prometheus/alerts.yml:ro
+      - ./monitoring/prometheus/q21_alerts.yml:/etc/prometheus/q21_alerts.yml:ro
+      - prometheusdata:/prometheus
+    depends_on:
+      gateway:
+        condition: service_healthy
+
+  grafana:
+    image: grafana/grafana:11.2.2
+    ports:
+      - "127.0.0.1:3000:3000"
+    profiles:
+      - monitoring
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-neftekod-local}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - grafanadata:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - prometheus
+
+  alertmanager:
+    image: prom/alertmanager:v0.27.0
+    profiles:
+      - monitoring
+    command: ["--config.file=/etc/alertmanager/alertmanager.yml", "--storage.path=/alertmanager"]
+    ports:
+      - "127.0.0.1:9093:9093"
+    volumes:
+      - ./monitoring/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - alertmanagerdata:/alertmanager
+
+volumes:
+  pgdata:
+  miniodata:
+  mlfdata:
+  prometheusdata:
+  grafanadata:
+  alertmanagerdata:

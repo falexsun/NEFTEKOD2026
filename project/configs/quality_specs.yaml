@@ -1,0 +1,55 @@
+# Diesel fuel quality specifications (GOST R 52368-2005 / Euro-5)
+quality_indicators:
+  sulfur:
+    unit: "mg/kg"
+    hard_limit_max: 10.0
+    warning_threshold: 8.0
+    source_priority: ["PAK", "LIMS", "VAK"]
+    description: "Содержание серы в дизельном топливе"
+
+  density_15:
+    unit: "kg/m3"
+    hard_limit_min: 820.0
+    hard_limit_max: 845.0
+    warning_min: 825.0
+    warning_max: 840.0
+    source_priority: ["PAK", "LIMS"]
+    description: "Плотность при 15°C"
+
+  t95:
+    unit: "°C"
+    hard_limit_max: 360.0
+    warning_threshold: 350.0
+    source_priority: ["LIMS", "VAK"]
+    description: "95% перегонки"
+
+  t50:
+    unit: "°C"
+    source_priority: ["LIMS", "VAK"]
+    description: "50% перегонки"
+
+  flash_point:
+    unit: "°C"
+    hard_limit_min: 55.0
+    source_priority: ["LIMS", "VAK"]
+    description: "Температура вспышки"
+
+  cloud_point:
+    unit: "°C"
+    source_priority: ["LIMS", "VAK"]
+    description: "Температура помутнения"
+
+  pour_point:
+    unit: "°C"
+    source_priority: ["LIMS"]
+    description: "Предельная температура фильтруемости (ПТФ)"
+
+  cetane_number:
+    hard_limit_min: 51.0
+    source_priority: ["LIMS"]
+    description: "Цетановое число"
+
+  cfpp:
+    unit: "°C"
+    source_priority: ["LIMS", "VAK"]
+    description: "Температура помутнения (CFPP)"

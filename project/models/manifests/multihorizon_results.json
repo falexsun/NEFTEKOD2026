@@ -1,0 +1,172 @@
+[
+  {
+    "horizon_hours": 0.5,
+    "horizon_steps": 3,
+    "train": {
+      "split": "train",
+      "mae_persistence": 0.666151534296283,
+      "mae_model": 0.5490173344083605,
+      "improvement_pct": 17.583716895835437,
+      "n": 51966
+    },
+    "validation": {
+      "split": "validation",
+      "mae_persistence": 0.7843466354063927,
+      "mae_model": 0.7294816628980523,
+      "improvement_pct": 6.994990484011359,
+      "n": 21178
+    },
+    "calibration": {
+      "split": "calibration",
+      "mae_persistence": 0.4989177324468972,
+      "mae_model": 0.46924140454611435,
+      "improvement_pct": 5.948140539170247,
+      "n": 78432
+    },
+    "evaluation": {
+      "split": "evaluation",
+      "mae_persistence": 0.5838911444164897,
+      "mae_model": 0.5740455740208461,
+      "improvement_pct": 1.6861996435110775,
+      "n": 30264
+    },
+    "model_path": "/home/faizov/projects/NEFTECODE2026/eda/experiments/q21_multihorizon_20260916_054306/reg_h0.5_residual.cbm",
+    "n_features": 67
+  },
+  {
+    "horizon_hours": 1.0,
+    "horizon_steps": 6,
+    "train": {
+      "split": "train",
+      "mae_persistence": 1.048514713152188,
+      "mae_model": 0.8586953462359147,
+      "improvement_pct": 18.10364361465299,
+      "n": 51966
+    },
+    "validation": {
+      "split": "validation",
+      "mae_persistence": 1.1658356613893368,
+      "mae_model": 1.0774782003203587,
+      "improvement_pct": 7.57889503600205,
+      "n": 21178
+    },
+    "calibration": {
+      "split": "calibration",
+      "mae_persistence": 0.7825322151222851,
+      "mae_model": 0.7471887176710096,
+      "improvement_pct": 4.5165549440993225,
+      "n": 78432
+    },
+    "evaluation": {
+      "split": "evaluation",
+      "mae_persistence": 0.8463463355975419,
+      "mae_model": 0.8095203925449378,
+      "improvement_pct": 4.3511670699919875,
+      "n": 30261
+    },
+    "model_path": "/home/faizov/projects/NEFTECODE2026/eda/experiments/q21_multihorizon_20260916_054306/reg_h1.0_residual.cbm",
+    "n_features": 67
+  },
+  {
+    "horizon_hours": 2.0,
+    "horizon_steps": 12,
+    "train": {
+      "split": "train",
+      "mae_persistence": 1.36251292693989,
+      "mae_model": 1.0514017152626232,
+      "improvement_pct": 22.8336337605252,
+      "n": 51960
+    },
+    "validation": {
+      "split": "validation",
+      "mae_persistence": 1.5326138172116257,
+      "mae_model": 1.3595366277449368,
+      "improvement_pct": 11.29294200032585,
+      "n": 21178
+    },
+    "calibration": {
+      "split": "calibration",
+      "mae_persistence": 1.1632746285385407,
+      "mae_model": 1.0905810244234408,
+      "improvement_pct": 6.249049221199568,
+      "n": 78432
+    },
+    "evaluation": {
+      "split": "evaluation",
+      "mae_persistence": 1.2370294238322335,
+      "mae_model": 1.1476661222418019,
+      "improvement_pct": 7.224023929324991,
+      "n": 30255
+    },
+    "model_path": "/home/faizov/projects/NEFTECODE2026/eda/experiments/q21_multihorizon_20260916_054306/reg_h2.0_residual.cbm",
+    "n_features": 68
+  },
+  {
+    "horizon_hours": 3.0,
+    "horizon_steps": 18,
+    "train": {
+      "split": "train",
+      "mae_persistence": 1.4205005089998886,
+      "mae_model": 1.0766366532940204,
+      "improvement_pct": 24.207232135943933,
+      "n": 51948
+    },
+    "validation": {
+      "split": "validation",
+      "mae_persistence": 1.6675904670236208,
+      "mae_model": 1.4734102408444167,
+      "improvement_pct": 11.644359332767376,
+      "n": 21178
+    },
+    "calibration": {
+      "split": "calibration",
+      "mae_persistence": 1.3792574833843736,
+      "mae_model": 1.182555457283255,
+      "improvement_pct": 14.26144345568153,
+      "n": 78432
+    },
+    "evaluation": {
+      "split": "evaluation",
+      "mae_persistence": 1.4549374259199706,
+      "mae_model": 1.3116235244774437,
+      "improvement_pct": 9.85017629551375,
+      "n": 30249
+    },
+    "model_path": "/home/faizov/projects/NEFTECODE2026/eda/experiments/q21_multihorizon_20260916_054306/reg_h3.0_residual.cbm",
+    "n_features": 68
+  },
+  {
+    "horizon_hours": 6.0,
+    "horizon_steps": 36,
+    "train": {
+      "split": "train",
+      "mae_persistence": 1.5925293569961319,
+      "mae_model": 1.2222163891615034,
+      "improvement_pct": 23.253132898794522,
+      "n": 51948
+    },
+    "validation": {
+      "split": "validation",
+      "mae_persistence": 1.8637559156869632,
+      "mae_model": 1.6463578103803616,
+      "improvement_pct": 11.664515909878183,
+      "n": 21178
+    },
+    "calibration": {
+      "split": "calibration",
+      "mae_persistence": 1.490797049233403,
+      "mae_model": 1.2639402110429763,
+      "improvement_pct": 15.217151007045594,
+      "n": 78432
+    },
+    "evaluation": {
+      "split": "evaluation",
+      "mae_persistence": 1.6155931142132836,
+      "mae_model": 1.5710755691042284,
+      "improvement_pct": 2.7554923772210467,
+      "n": 30231
+    },
+    "model_path": "/home/faizov/projects/NEFTECODE2026/eda/experiments/q21_multihorizon_20260916_054306/reg_h6.0_residual.cbm",
+    "n_features": 68
+  }
+]
