@@ -1,0 +1,11 @@
+{
+  "phase": "finished",
+  "stop_reason": "time_budget",
+  "trials_successful": 930,
+  "trials_failed": 1,
+  "frozen_winners": 20,
+  "final_evaluations": 20,
+  "final_evaluations_pending": 0,
+  "elapsed_hours": 11.728692717618413,
+  "finished_utc": "2026-09-15T07:44:17.559541+00:00"
+}

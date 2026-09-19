@@ -1,0 +1,54 @@
+{
+  "id": "trial_000310",
+  "config": {
+    "id": "trial_000310",
+    "objective": "risk",
+    "target": "Mg.Sulfur",
+    "horizon": 6,
+    "history": 24,
+    "windows": "all",
+    "exclude_f25": true,
+    "depth": 4,
+    "iterations": 2000,
+    "lr": 0.03,
+    "l2": 100.0,
+    "random_strength": 1.0,
+    "borders": 254,
+    "loss": "RMSE",
+    "positive_weight": 2.0,
+    "seed": 17
+  },
+  "folds": [
+    {
+      "year": 2024,
+      "score": 0.14556821505337675,
+      "validation_ap": 0.14556821505337675,
+      "validation_prevalence": 0.096045197740113,
+      "validation_brier": 0.10590020069581951,
+      "counts": {
+        "train": 406,
+        "validation": 177,
+        "calibration": 99,
+        "evaluation": 99
+      },
+      "trees": 614
+    },
+    {
+      "year": 2025,
+      "score": 0.1856063798361438,
+      "validation_ap": 0.1856063798361438,
+      "validation_prevalence": 0.16842105263157894,
+      "validation_brier": 0.15753172943489732,
+      "counts": {
+        "train": 792,
+        "validation": 190,
+        "calibration": 99,
+        "evaluation": 119
+      },
+      "trees": 30
+    }
+  ],
+  "selection_score": 0.16158348096648356,
+  "saved": [],
+  "finished_utc": "2026-09-14T23:50:40.254174+00:00"
+}

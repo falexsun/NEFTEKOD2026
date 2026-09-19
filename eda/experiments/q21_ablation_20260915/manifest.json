@@ -1,0 +1,41 @@
+{
+  "parent_config": {
+    "id": "trial_000400",
+    "objective": "risk",
+    "target": "Mg.Sulfur",
+    "horizon": 0,
+    "history": 6,
+    "windows": "short",
+    "exclude_f25": true,
+    "depth": 6,
+    "iterations": 1200,
+    "lr": 0.05,
+    "l2": 10.0,
+    "random_strength": 3.0,
+    "borders": 128,
+    "loss": "RMSE",
+    "positive_weight": 1.0,
+    "seed": 42
+  },
+  "years": [
+    2024,
+    2026
+  ],
+  "seeds": [
+    17,
+    42,
+    2026
+  ],
+  "variants": [
+    "full",
+    "without_q21",
+    "q21_only",
+    "without_q21_without_lab",
+    "q21_delayed6h"
+  ],
+  "note": "Same hyperparameters and split/early-stopping procedure. Aggregate zero/negative/unchanged counts removed in ALL variants to eliminate indirect Q21 leakage. Retrospective diagnostic, not new blind test.",
+  "source_hashes": {
+    "242000_tags.csv": "19b9744e6315a395d3d77ac53a6e09b6d69488fa7f84bd21147cd8d7c9be7e21",
+    "ЛИМСы 01.01.2023 - н.в_ (2).xlsx": "7bf3a14d8d3d9d99712beeb9860a2b8988adc554c670e4fa3c5cc5d4c0c02cd2"
+  }
+}

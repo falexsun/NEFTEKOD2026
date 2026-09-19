@@ -1,0 +1,146 @@
+# .gitignore для Нефтекод проекта
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# uv
+.uv/
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Docker
+*.log
+docker-compose.override.yml
+
+# Data files
+*.csv
+*.parquet
+*.pkl
+*.joblib
+*.h5
+*.hdf5
+
+# Models (кроме примеров)
+models/*
+!models/.gitkeep
+!models/README.md
+
+# Data directories
+data/*
+!data/.gitkeep
+!data/README.md
+
+# Reports
+reports/*
+!reports/.gitkeep
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+.pnpm-debug.log
+
+# Frontend build
+frontend/dist/
+frontend/.vite/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Redis
+dump.rdb
+
+# Grafana
+monitoring/grafana/data/
+
+# Prometheus
+monitoring/prometheus/data/
+
+# Logs
+logs/
+*.log
+
+# Test coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+
+# JetBrains
+*.iml
+.idea/
+*.ipr
+*.iws
+out/
+
+# Secrets
+secrets/
+*.key
+*.pem
+*.crt
+credentials.json
+
+# Backup files
+*.bak
+*.backup

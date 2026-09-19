@@ -1,0 +1,83 @@
+{
+  "id": "stability_trial_000416_seed101",
+  "config": {
+    "id": "stability_trial_000416_seed101",
+    "objective": "sulfur",
+    "target": "Mg.Sulfur",
+    "horizon": 12,
+    "history": 48,
+    "windows": "all",
+    "exclude_f25": true,
+    "depth": 4,
+    "iterations": 2000,
+    "lr": 0.03,
+    "l2": 10.0,
+    "random_strength": 3.0,
+    "borders": 254,
+    "loss": "MAE",
+    "positive_weight": 8.0,
+    "seed": 101,
+    "final": true,
+    "role": "stability"
+  },
+  "folds": [
+    {
+      "year": 2024,
+      "score": -0.999969678981811,
+      "validation_mae": 14.684300509231798,
+      "baseline_mae": 1.5969697176808058,
+      "counts": {
+        "train": 405,
+        "validation": 177,
+        "calibration": 99,
+        "evaluation": 99
+      },
+      "trees": 4,
+      "evaluation_mae": 1.5976611300297505,
+      "evaluation_rmse": 2.0396182332401933,
+      "halfwidth90": 4.104279133840464,
+      "coverage90": 0.9696969696969697
+    },
+    {
+      "year": 2025,
+      "score": -0.9558289060760137,
+      "validation_mae": 1.4488353716843785,
+      "baseline_mae": 1.285714257665041,
+      "counts": {
+        "train": 791,
+        "validation": 190,
+        "calibration": 99,
+        "evaluation": 119
+      },
+      "trees": 561,
+      "evaluation_mae": 1.3256505604544404,
+      "evaluation_rmse": 1.6179516347191607,
+      "halfwidth90": 3.8780001698887645,
+      "coverage90": 0.9831932773109243
+    },
+    {
+      "year": 2026,
+      "score": -0.9558289060760137,
+      "validation_mae": 1.4488353716843785,
+      "baseline_mae": 1.6780487670585877,
+      "counts": {
+        "train": 791,
+        "validation": 190,
+        "calibration": 221,
+        "evaluation": 246
+      },
+      "trees": 561,
+      "evaluation_mae": 1.6548651450889966,
+      "evaluation_rmse": 2.436490112947237,
+      "halfwidth90": 2.8518897616777394,
+      "coverage90": 0.8414634146341463
+    }
+  ],
+  "selection_score": -0.982313369819492,
+  "saved": [
+    "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_stability/final/stability_trial_000416_seed101_2024",
+    "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_stability/final/stability_trial_000416_seed101_2025",
+    "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_stability/final/stability_trial_000416_seed101_2026"
+  ],
+  "finished_utc": "2026-09-15T08:20:13.961208+00:00"
+}

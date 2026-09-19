@@ -1,0 +1,23 @@
+{
+  "target": "LIMS hydrotreater point 2 CetaneNumber",
+  "n": 42,
+  "split_counts": {
+    "train": 25,
+    "validation": 11,
+    "evaluation": 6
+  },
+  "feature_counts": {
+    "history_only": 4,
+    "process_no_density": 186,
+    "process_plus_density": 196,
+    "density_history_only": 14
+  },
+  "density_proxy": "1000*W70/F30; invalid when F30<=10 or W70<=0",
+  "scenario_lower_limit": 51,
+  "limitations": "Only 42 targets; reservoir park breaks known direct AVT-hydro lag; 51 is scenario, not organizer-confirmed product specification.",
+  "source_sha256": {
+    "242000_tags.csv": "19b9744e6315a395d3d77ac53a6e09b6d69488fa7f84bd21147cd8d7c9be7e21",
+    "avt_tags.csv": "514adfcad05c1e7bd80616889bfe8bb0617aad792ab4248f178a721606f0e10f",
+    "ЛИМСы 01.01.2023 - н.в_ (2).xlsx": "7bf3a14d8d3d9d99712beeb9860a2b8988adc554c670e4fa3c5cc5d4c0c02cd2"
+  }
+}

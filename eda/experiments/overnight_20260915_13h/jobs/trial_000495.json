@@ -1,0 +1,18 @@
+{
+  "id": "trial_000495",
+  "objective": "risk",
+  "target": "Mg.Sulfur",
+  "horizon": 12,
+  "history": 48,
+  "windows": "all",
+  "exclude_f25": false,
+  "depth": 9,
+  "iterations": 3000,
+  "lr": 0.03,
+  "l2": 3.0,
+  "random_strength": 1.0,
+  "borders": 128,
+  "loss": "RMSE",
+  "positive_weight": 4.0,
+  "seed": 3407
+}

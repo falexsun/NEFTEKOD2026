@@ -1,0 +1,16 @@
+{
+  "target": "CetaneNumber minus previous CetaneNumber",
+  "split_counts": {
+    "train": 24,
+    "validation": 11,
+    "evaluation": 6
+  },
+  "feature_counts": {
+    "residual_history_only": 4,
+    "residual_process_no_density": 186,
+    "residual_process_plus_density": 196,
+    "residual_density_history_only": 14
+  },
+  "density_proxy": "1000*W70/F30",
+  "selection": "SHAP ranking and variant choice on validation; 2026 evaluation untouched"
+}

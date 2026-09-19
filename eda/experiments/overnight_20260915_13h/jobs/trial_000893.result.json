@@ -1,0 +1,52 @@
+{
+  "id": "trial_000893",
+  "config": {
+    "id": "trial_000893",
+    "objective": "density",
+    "target": "D15",
+    "horizon": 6,
+    "history": 48,
+    "windows": "long",
+    "exclude_f25": true,
+    "depth": 9,
+    "iterations": 2000,
+    "lr": 0.03,
+    "l2": 100.0,
+    "random_strength": 0.2,
+    "borders": 64,
+    "loss": "RMSE",
+    "positive_weight": 2.0,
+    "seed": 101
+  },
+  "folds": [
+    {
+      "year": 2024,
+      "score": -0.9113407100827651,
+      "validation_mae": 2.202730202094074,
+      "baseline_mae": 2.4170216228945036,
+      "counts": {
+        "train": 367,
+        "validation": 141,
+        "calibration": 87,
+        "evaluation": 87
+      },
+      "trees": 653
+    },
+    {
+      "year": 2025,
+      "score": -0.5129143929501414,
+      "validation_mae": 1.1039998255656749,
+      "baseline_mae": 2.152405627020474,
+      "counts": {
+        "train": 691,
+        "validation": 145,
+        "calibration": 16,
+        "evaluation": 16
+      },
+      "trees": 1993
+    }
+  ],
+  "selection_score": -0.7519701832297156,
+  "saved": [],
+  "finished_utc": "2026-09-15T07:02:19.275398+00:00"
+}

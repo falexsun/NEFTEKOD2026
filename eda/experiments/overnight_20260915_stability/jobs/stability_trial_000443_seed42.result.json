@@ -1,0 +1,83 @@
+{
+  "id": "stability_trial_000443_seed42",
+  "config": {
+    "id": "stability_trial_000443_seed42",
+    "objective": "density",
+    "target": "D15",
+    "horizon": 0,
+    "history": 24,
+    "windows": "short",
+    "exclude_f25": true,
+    "depth": 4,
+    "iterations": 1200,
+    "lr": 0.08,
+    "l2": 10.0,
+    "random_strength": 1.0,
+    "borders": 128,
+    "loss": "RMSE",
+    "positive_weight": 1.0,
+    "seed": 42,
+    "final": true,
+    "role": "stability"
+  },
+  "folds": [
+    {
+      "year": 2024,
+      "score": -0.7040756581842391,
+      "validation_mae": 1.7017660899849854,
+      "baseline_mae": 2.8735646214978448,
+      "counts": {
+        "train": 367,
+        "validation": 141,
+        "calibration": 87,
+        "evaluation": 87
+      },
+      "trees": 41,
+      "evaluation_mae": 1.1933667087103186,
+      "evaluation_rmse": 1.5151937530036867,
+      "halfwidth90": 2.1159402739140205,
+      "coverage90": 0.8045977011494253
+    },
+    {
+      "year": 2025,
+      "score": -0.4549870119791843,
+      "validation_mae": 0.9793166048052281,
+      "baseline_mae": 2.1624908447265625,
+      "counts": {
+        "train": 691,
+        "validation": 145,
+        "calibration": 16,
+        "evaluation": 16
+      },
+      "trees": 110,
+      "evaluation_mae": 1.5656665265677248,
+      "evaluation_rmse": 2.056034563086931,
+      "halfwidth90": 4.162786784554555,
+      "coverage90": 0.9375
+    },
+    {
+      "year": 2026,
+      "score": -0.4549870119791843,
+      "validation_mae": 0.9793166048052281,
+      "baseline_mae": 2.3420290739639946,
+      "counts": {
+        "train": 691,
+        "validation": 145,
+        "calibration": 33,
+        "evaluation": 138
+      },
+      "trees": 110,
+      "evaluation_mae": 1.8240049900557584,
+      "evaluation_rmse": 2.85880427781733,
+      "halfwidth90": 3.2664609278908756,
+      "coverage90": 0.8478260869565217
+    }
+  ],
+  "selection_score": -0.6044401997022172,
+  "saved": [
+    "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_stability/final/stability_trial_000443_seed42_2024",
+    "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_stability/final/stability_trial_000443_seed42_2025",
+    "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_stability/final/stability_trial_000443_seed42_2026"
+  ],
+  "finished_utc": "2026-09-15T08:20:41.801226+00:00"
+}

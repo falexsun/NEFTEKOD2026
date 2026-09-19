@@ -1,0 +1,82 @@
+{
+  "id": "final_trial_000212",
+  "config": {
+    "id": "final_trial_000212",
+    "objective": "sulfur_log",
+    "target": "Mg.Sulfur",
+    "horizon": 6,
+    "history": 24,
+    "windows": "long",
+    "exclude_f25": false,
+    "depth": 7,
+    "iterations": 3000,
+    "lr": 0.08,
+    "l2": 30.0,
+    "random_strength": 1.0,
+    "borders": 254,
+    "loss": "RMSE",
+    "positive_weight": 4.0,
+    "seed": 42,
+    "final": true
+  },
+  "folds": [
+    {
+      "year": 2024,
+      "score": -0.9861831382444397,
+      "validation_mae": 14.481848663515375,
+      "baseline_mae": 1.5969697176808058,
+      "counts": {
+        "train": 406,
+        "validation": 177,
+        "calibration": 99,
+        "evaluation": 99
+      },
+      "trees": 1205,
+      "evaluation_mae": 1.4779050417344328,
+      "evaluation_rmse": 1.8763086611601123,
+      "halfwidth90": 3.445463211007592,
+      "coverage90": 0.9292929292929293
+    },
+    {
+      "year": 2025,
+      "score": -0.9125521380718497,
+      "validation_mae": 1.3832369033203915,
+      "baseline_mae": 1.285714257665041,
+      "counts": {
+        "train": 792,
+        "validation": 190,
+        "calibration": 99,
+        "evaluation": 119
+      },
+      "trees": 158,
+      "evaluation_mae": 1.3758900539128773,
+      "evaluation_rmse": 1.6606855416385284,
+      "halfwidth90": 3.0476352532152973,
+      "coverage90": 0.957983193277311
+    },
+    {
+      "year": 2026,
+      "score": -0.9125521380718497,
+      "validation_mae": 1.3832369033203915,
+      "baseline_mae": 1.6799999872944793,
+      "counts": {
+        "train": 792,
+        "validation": 190,
+        "calibration": 221,
+        "evaluation": 245
+      },
+      "trees": 158,
+      "evaluation_mae": 1.669260538607605,
+      "evaluation_rmse": 2.458822671767176,
+      "halfwidth90": 2.647577506980773,
+      "coverage90": 0.8163265306122449
+    }
+  ],
+  "selection_score": -0.9567307381754037,
+  "saved": [
+    "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000212_2024",
+    "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000212_2025",
+    "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000212_2026"
+  ],
+  "finished_utc": "2026-09-15T07:40:35.611386+00:00"
+}

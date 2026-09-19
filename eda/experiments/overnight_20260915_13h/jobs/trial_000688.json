@@ -1,0 +1,18 @@
+{
+  "id": "trial_000688",
+  "objective": "density",
+  "target": "D15",
+  "horizon": 3,
+  "history": 0,
+  "windows": "long",
+  "exclude_f25": true,
+  "depth": 9,
+  "iterations": 1200,
+  "lr": 0.015,
+  "l2": 3.0,
+  "random_strength": 3.0,
+  "borders": 64,
+  "loss": "MAE",
+  "positive_weight": 1.0,
+  "seed": 17
+}

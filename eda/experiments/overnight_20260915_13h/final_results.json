@@ -1,0 +1,1714 @@
+[
+  {
+    "id": "final_trial_000400",
+    "config": {
+      "id": "final_trial_000400",
+      "objective": "risk",
+      "target": "Mg.Sulfur",
+      "horizon": 0,
+      "history": 6,
+      "windows": "short",
+      "exclude_f25": true,
+      "depth": 6,
+      "iterations": 1200,
+      "lr": 0.05,
+      "l2": 10.0,
+      "random_strength": 3.0,
+      "borders": 128,
+      "loss": "RMSE",
+      "positive_weight": 1.0,
+      "seed": 42,
+      "final": true
+    },
+    "folds": [
+      {
+        "year": 2024,
+        "score": 0.624414199603695,
+        "validation_ap": 0.624414199603695,
+        "validation_prevalence": 0.096045197740113,
+        "validation_brier": 0.08091780768131915,
+        "counts": {
+          "train": 406,
+          "validation": 177,
+          "calibration": 99,
+          "evaluation": 99
+        },
+        "trees": 87,
+        "threshold": 0.23500000000000001,
+        "tp": 3,
+        "fp": 16,
+        "fn": 7,
+        "tn": 73,
+        "evaluation_ap": 0.20529557399122617,
+        "evaluation_prevalence": 0.10101010101010101,
+        "brier": 0.10180968555171341,
+        "baseline_brier": 0.1000296345973261
+      },
+      {
+        "year": 2025,
+        "score": 0.593521004279878,
+        "validation_ap": 0.593521004279878,
+        "validation_prevalence": 0.16842105263157894,
+        "validation_brier": 0.1031314003308877,
+        "counts": {
+          "train": 792,
+          "validation": 190,
+          "calibration": 99,
+          "evaluation": 119
+        },
+        "trees": 60,
+        "threshold": 0.47500000000000003,
+        "tp": 3,
+        "fp": 1,
+        "fn": 23,
+        "tn": 92,
+        "evaluation_ap": 0.42195400595997123,
+        "evaluation_prevalence": 0.2184873949579832,
+        "brier": 0.16871004109203286,
+        "baseline_brier": 0.1755805551482914
+      },
+      {
+        "year": 2026,
+        "score": 0.593521004279878,
+        "validation_ap": 0.593521004279878,
+        "validation_prevalence": 0.16842105263157894,
+        "validation_brier": 0.1031314003308877,
+        "counts": {
+          "train": 792,
+          "validation": 190,
+          "calibration": 221,
+          "evaluation": 245
+        },
+        "trees": 60,
+        "threshold": 0.41000000000000003,
+        "tp": 13,
+        "fp": 18,
+        "fn": 22,
+        "tn": 192,
+        "evaluation_ap": 0.41564631271294394,
+        "evaluation_prevalence": 0.14285714285714285,
+        "brier": 0.10506465873194512,
+        "baseline_brier": 0.12248659028962063
+      }
+    ],
+    "selection_score": 0.6058782824094048,
+    "saved": [
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000400_2024",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000400_2025",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000400_2026"
+    ],
+    "finished_utc": "2026-09-15T07:30:56.908415+00:00"
+  },
+  {
+    "id": "final_trial_000301",
+    "config": {
+      "id": "final_trial_000301",
+      "objective": "sulfur",
+      "target": "Mg.Sulfur",
+      "horizon": 0,
+      "history": 6,
+      "windows": "long",
+      "exclude_f25": true,
+      "depth": 5,
+      "iterations": 3000,
+      "lr": 0.015,
+      "l2": 10.0,
+      "random_strength": 3.0,
+      "borders": 64,
+      "loss": "MAE",
+      "positive_weight": 2.0,
+      "seed": 101,
+      "final": true
+    },
+    "folds": [
+      {
+        "year": 2024,
+        "score": -0.9759795175486702,
+        "validation_mae": 14.332011087708617,
+        "baseline_mae": 1.5969697176808058,
+        "counts": {
+          "train": 406,
+          "validation": 177,
+          "calibration": 99,
+          "evaluation": 99
+        },
+        "trees": 1487,
+        "evaluation_mae": 1.2401529372760118,
+        "evaluation_rmse": 1.631641220560333,
+        "halfwidth90": 2.8030226533101086,
+        "coverage90": 0.9191919191919192
+      },
+      {
+        "year": 2025,
+        "score": -0.734318762029886,
+        "validation_mae": 1.1130726323061984,
+        "baseline_mae": 1.285714257665041,
+        "counts": {
+          "train": 792,
+          "validation": 190,
+          "calibration": 99,
+          "evaluation": 119
+        },
+        "trees": 1934,
+        "evaluation_mae": 1.0773983573565395,
+        "evaluation_rmse": 1.3217745982922182,
+        "halfwidth90": 2.1037042777124952,
+        "coverage90": 0.8571428571428571
+      },
+      {
+        "year": 2026,
+        "score": -0.734318762029886,
+        "validation_mae": 1.1130726323061984,
+        "baseline_mae": 1.6799999872944793,
+        "counts": {
+          "train": 792,
+          "validation": 190,
+          "calibration": 221,
+          "evaluation": 245
+        },
+        "trees": 1934,
+        "evaluation_mae": 1.2740558100445367,
+        "evaluation_rmse": 1.996809431475715,
+        "halfwidth90": 2.2554634816660837,
+        "coverage90": 0.8489795918367347
+      }
+    ],
+    "selection_score": -0.8793152153411565,
+    "saved": [
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000301_2024",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000301_2025",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000301_2026"
+    ],
+    "finished_utc": "2026-09-15T07:31:38.797525+00:00"
+  },
+  {
+    "id": "final_trial_000882",
+    "config": {
+      "id": "final_trial_000882",
+      "objective": "sulfur_log",
+      "target": "Mg.Sulfur",
+      "horizon": 0,
+      "history": 6,
+      "windows": "long",
+      "exclude_f25": false,
+      "depth": 4,
+      "iterations": 1200,
+      "lr": 0.05,
+      "l2": 3.0,
+      "random_strength": 0.2,
+      "borders": 254,
+      "loss": "MAE",
+      "positive_weight": 8.0,
+      "seed": 101,
+      "final": true
+    },
+    "folds": [
+      {
+        "year": 2024,
+        "score": -0.9693616210471836,
+        "validation_mae": 14.234828960080735,
+        "baseline_mae": 1.5969697176808058,
+        "counts": {
+          "train": 406,
+          "validation": 177,
+          "calibration": 99,
+          "evaluation": 99
+        },
+        "trees": 139,
+        "evaluation_mae": 1.209925396099343,
+        "evaluation_rmse": 1.6686427513212003,
+        "halfwidth90": 3.084300316610065,
+        "coverage90": 0.9393939393939394
+      },
+      {
+        "year": 2025,
+        "score": -0.7237490587448083,
+        "validation_mae": 1.0970511875787134,
+        "baseline_mae": 1.285714257665041,
+        "counts": {
+          "train": 792,
+          "validation": 190,
+          "calibration": 99,
+          "evaluation": 119
+        },
+        "trees": 46,
+        "evaluation_mae": 1.09343980829249,
+        "evaluation_rmse": 1.3340927440215908,
+        "halfwidth90": 2.2143224308084815,
+        "coverage90": 0.8991596638655462
+      },
+      {
+        "year": 2026,
+        "score": -0.7237490587448083,
+        "validation_mae": 1.0970511875787134,
+        "baseline_mae": 1.6799999872944793,
+        "counts": {
+          "train": 792,
+          "validation": 190,
+          "calibration": 221,
+          "evaluation": 245
+        },
+        "trees": 46,
+        "evaluation_mae": 1.3024167636782629,
+        "evaluation_rmse": 1.9722374803596303,
+        "halfwidth90": 2.2143224308084815,
+        "coverage90": 0.8367346938775511
+      }
+    ],
+    "selection_score": -0.8711165961262335,
+    "saved": [
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000882_2024",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000882_2025",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000882_2026"
+    ],
+    "finished_utc": "2026-09-15T07:31:52.629015+00:00"
+  },
+  {
+    "id": "final_trial_000443",
+    "config": {
+      "id": "final_trial_000443",
+      "objective": "density",
+      "target": "D15",
+      "horizon": 0,
+      "history": 24,
+      "windows": "short",
+      "exclude_f25": true,
+      "depth": 4,
+      "iterations": 1200,
+      "lr": 0.08,
+      "l2": 10.0,
+      "random_strength": 1.0,
+      "borders": 128,
+      "loss": "RMSE",
+      "positive_weight": 1.0,
+      "seed": 3407,
+      "final": true
+    },
+    "folds": [
+      {
+        "year": 2024,
+        "score": -0.659909864818445,
+        "validation_mae": 1.5950164124275705,
+        "baseline_mae": 2.8735646214978448,
+        "counts": {
+          "train": 367,
+          "validation": 141,
+          "calibration": 87,
+          "evaluation": 87
+        },
+        "trees": 62,
+        "evaluation_mae": 1.2290016733783689,
+        "evaluation_rmse": 1.592186933597772,
+        "halfwidth90": 2.0852831681258976,
+        "coverage90": 0.8275862068965517
+      },
+      {
+        "year": 2025,
+        "score": -0.44680823844811557,
+        "validation_mae": 0.9617125666348297,
+        "baseline_mae": 2.1624908447265625,
+        "counts": {
+          "train": 691,
+          "validation": 145,
+          "calibration": 16,
+          "evaluation": 16
+        },
+        "trees": 170,
+        "evaluation_mae": 1.7487686618376301,
+        "evaluation_rmse": 2.13486932689368,
+        "halfwidth90": 4.082704444877891,
+        "coverage90": 0.9375
+      },
+      {
+        "year": 2026,
+        "score": -0.44680823844811557,
+        "validation_mae": 0.9617125666348297,
+        "baseline_mae": 2.3420290739639946,
+        "counts": {
+          "train": 691,
+          "validation": 145,
+          "calibration": 33,
+          "evaluation": 138
+        },
+        "trees": 170,
+        "evaluation_mae": 1.879550491040483,
+        "evaluation_rmse": 2.8305092330892387,
+        "halfwidth90": 3.2047168002864055,
+        "coverage90": 0.8478260869565217
+      }
+    ],
+    "selection_score": -0.5746692142703131,
+    "saved": [
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000443_2024",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000443_2025",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000443_2026"
+    ],
+    "finished_utc": "2026-09-15T07:32:05.268200+00:00"
+  },
+  {
+    "id": "final_trial_000684",
+    "config": {
+      "id": "final_trial_000684",
+      "objective": "flash",
+      "target": "FlashPoint",
+      "horizon": 0,
+      "history": 24,
+      "windows": "long",
+      "exclude_f25": false,
+      "depth": 5,
+      "iterations": 2000,
+      "lr": 0.015,
+      "l2": 30.0,
+      "random_strength": 1.0,
+      "borders": 64,
+      "loss": "RMSE",
+      "positive_weight": 2.0,
+      "seed": 2026,
+      "final": true
+    },
+    "folds": [
+      {
+        "year": 2024,
+        "score": -0.6672686706112702,
+        "validation_mae": 4.040129214596596,
+        "baseline_mae": 5.247422680412371,
+        "counts": {
+          "train": 469,
+          "validation": 201,
+          "calibration": 96,
+          "evaluation": 97
+        },
+        "trees": 1985,
+        "evaluation_mae": 2.8971280991076043,
+        "evaluation_rmse": 3.7496592931713066,
+        "halfwidth90": 5.22459955000113,
+        "coverage90": 0.8762886597938144
+      },
+      {
+        "year": 2025,
+        "score": -0.5924761865806989,
+        "validation_mae": 2.965373236876124,
+        "baseline_mae": 4.510204081632653,
+        "counts": {
+          "train": 884,
+          "validation": 198,
+          "calibration": 97,
+          "evaluation": 98
+        },
+        "trees": 1297,
+        "evaluation_mae": 2.254807017829762,
+        "evaluation_rmse": 2.8809409077160955,
+        "halfwidth90": 5.539981812410815,
+        "coverage90": 0.9285714285714286
+      },
+      {
+        "year": 2026,
+        "score": -0.5924761865806989,
+        "validation_mae": 2.965373236876124,
+        "baseline_mae": 4.800884955752212,
+        "counts": {
+          "train": 884,
+          "validation": 198,
+          "calibration": 198,
+          "evaluation": 226
+        },
+        "trees": 1297,
+        "evaluation_mae": 2.5844492812144746,
+        "evaluation_rmse": 3.9377189335041627,
+        "halfwidth90": 5.14973075520038,
+        "coverage90": 0.8982300884955752
+      }
+    ],
+    "selection_score": -0.6373516769990416,
+    "saved": [
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000684_2024",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000684_2025",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000684_2026"
+    ],
+    "finished_utc": "2026-09-15T07:32:44.920527+00:00"
+  },
+  {
+    "id": "final_trial_000085",
+    "config": {
+      "id": "final_trial_000085",
+      "objective": "risk",
+      "target": "Mg.Sulfur",
+      "horizon": 3,
+      "history": 48,
+      "windows": "long",
+      "exclude_f25": true,
+      "depth": 8,
+      "iterations": 1200,
+      "lr": 0.05,
+      "l2": 30.0,
+      "random_strength": 0.2,
+      "borders": 128,
+      "loss": "RMSE",
+      "positive_weight": 4.0,
+      "seed": 17,
+      "final": true
+    },
+    "folds": [
+      {
+        "year": 2024,
+        "score": 0.20851172256308903,
+        "validation_ap": 0.20851172256308903,
+        "validation_prevalence": 0.096045197740113,
+        "validation_brier": 0.12242919945567542,
+        "counts": {
+          "train": 406,
+          "validation": 177,
+          "calibration": 99,
+          "evaluation": 99
+        },
+        "trees": 158,
+        "threshold": 0.375,
+        "tp": 1,
+        "fp": 7,
+        "fn": 9,
+        "tn": 82,
+        "evaluation_ap": 0.12176618630657751,
+        "evaluation_prevalence": 0.10101010101010101,
+        "brier": 0.10821647810611697,
+        "baseline_brier": 0.1000296345973261
+      },
+      {
+        "year": 2025,
+        "score": 0.33268686354655586,
+        "validation_ap": 0.33268686354655586,
+        "validation_prevalence": 0.16842105263157894,
+        "validation_brier": 0.21959979741143076,
+        "counts": {
+          "train": 792,
+          "validation": 190,
+          "calibration": 99,
+          "evaluation": 119
+        },
+        "trees": 6,
+        "threshold": 0.48,
+        "tp": 1,
+        "fp": 13,
+        "fn": 25,
+        "tn": 80,
+        "evaluation_ap": 0.21193965557550257,
+        "evaluation_prevalence": 0.2184873949579832,
+        "brier": 0.22566740494145215,
+        "baseline_brier": 0.1755805551482914
+      },
+      {
+        "year": 2026,
+        "score": 0.33268686354655586,
+        "validation_ap": 0.33268686354655586,
+        "validation_prevalence": 0.16842105263157894,
+        "validation_brier": 0.21959979741143076,
+        "counts": {
+          "train": 792,
+          "validation": 190,
+          "calibration": 221,
+          "evaluation": 245
+        },
+        "trees": 6,
+        "threshold": 0.485,
+        "tp": 10,
+        "fp": 46,
+        "fn": 25,
+        "tn": 164,
+        "evaluation_ap": 0.22049720136621598,
+        "evaluation_prevalence": 0.14285714285714285,
+        "brier": 0.22057598715055537,
+        "baseline_brier": 0.12248659028962063
+      }
+    ],
+    "selection_score": 0.25818177895647576,
+    "saved": [
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000085_2024",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000085_2025",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000085_2026"
+    ],
+    "finished_utc": "2026-09-15T07:33:43.064935+00:00"
+  },
+  {
+    "id": "final_trial_000906",
+    "config": {
+      "id": "final_trial_000906",
+      "objective": "sulfur",
+      "target": "Mg.Sulfur",
+      "horizon": 3,
+      "history": 6,
+      "windows": "short",
+      "exclude_f25": true,
+      "depth": 5,
+      "iterations": 3000,
+      "lr": 0.05,
+      "l2": 10.0,
+      "random_strength": 1.0,
+      "borders": 128,
+      "loss": "MAE",
+      "positive_weight": 1.0,
+      "seed": 3407,
+      "final": true
+    },
+    "folds": [
+      {
+        "year": 2024,
+        "score": -0.9999524642759579,
+        "validation_mae": 14.684047715652913,
+        "baseline_mae": 1.5969697176808058,
+        "counts": {
+          "train": 406,
+          "validation": 177,
+          "calibration": 99,
+          "evaluation": 99
+        },
+        "trees": 2,
+        "evaluation_mae": 1.5979265121395012,
+        "evaluation_rmse": 2.038093535481016,
+        "halfwidth90": 4.082184765487909,
+        "coverage90": 0.9595959595959596
+      },
+      {
+        "year": 2025,
+        "score": -0.9272991940105046,
+        "validation_mae": 1.4055903351284398,
+        "baseline_mae": 1.285714257665041,
+        "counts": {
+          "train": 792,
+          "validation": 190,
+          "calibration": 99,
+          "evaluation": 119
+        },
+        "trees": 751,
+        "evaluation_mae": 1.2764988789489462,
+        "evaluation_rmse": 1.539832825990856,
+        "halfwidth90": 3.2023629524446733,
+        "coverage90": 0.9747899159663865
+      },
+      {
+        "year": 2026,
+        "score": -0.9272991940105046,
+        "validation_mae": 1.4055903351284398,
+        "baseline_mae": 1.6799999872944793,
+        "counts": {
+          "train": 792,
+          "validation": 190,
+          "calibration": 221,
+          "evaluation": 245
+        },
+        "trees": 751,
+        "evaluation_mae": 1.6344765802696721,
+        "evaluation_rmse": 2.4059615584342757,
+        "halfwidth90": 2.70760585194148,
+        "coverage90": 0.8326530612244898
+      }
+    ],
+    "selection_score": -0.9708911561697766,
+    "saved": [
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000906_2024",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000906_2025",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000906_2026"
+    ],
+    "finished_utc": "2026-09-15T07:34:04.339122+00:00"
+  },
+  {
+    "id": "final_trial_000227",
+    "config": {
+      "id": "final_trial_000227",
+      "objective": "sulfur_log",
+      "target": "Mg.Sulfur",
+      "horizon": 3,
+      "history": 6,
+      "windows": "short",
+      "exclude_f25": true,
+      "depth": 4,
+      "iterations": 3000,
+      "lr": 0.05,
+      "l2": 30.0,
+      "random_strength": 0.2,
+      "borders": 64,
+      "loss": "RMSE",
+      "positive_weight": 2.0,
+      "seed": 3407,
+      "final": true
+    },
+    "folds": [
+      {
+        "year": 2024,
+        "score": -0.9946009608324466,
+        "validation_mae": 14.605462248120816,
+        "baseline_mae": 1.5969697176808058,
+        "counts": {
+          "train": 406,
+          "validation": 177,
+          "calibration": 99,
+          "evaluation": 99
+        },
+        "trees": 85,
+        "evaluation_mae": 1.542880517592185,
+        "evaluation_rmse": 1.9498108251332307,
+        "halfwidth90": 3.6160101723198625,
+        "coverage90": 0.9393939393939394
+      },
+      {
+        "year": 2025,
+        "score": -0.8532621001441576,
+        "validation_mae": 1.293365689348843,
+        "baseline_mae": 1.285714257665041,
+        "counts": {
+          "train": 792,
+          "validation": 190,
+          "calibration": 99,
+          "evaluation": 119
+        },
+        "trees": 1420,
+        "evaluation_mae": 1.2388862017684013,
+        "evaluation_rmse": 1.5225685606345516,
+        "halfwidth90": 3.64713587673549,
+        "coverage90": 0.9747899159663865
+      },
+      {
+        "year": 2026,
+        "score": -0.8532621001441576,
+        "validation_mae": 1.293365689348843,
+        "baseline_mae": 1.6799999872944793,
+        "counts": {
+          "train": 792,
+          "validation": 190,
+          "calibration": 221,
+          "evaluation": 245
+        },
+        "trees": 1420,
+        "evaluation_mae": 1.7273579074798917,
+        "evaluation_rmse": 2.7376768555995534,
+        "halfwidth90": 2.8405062012196023,
+        "coverage90": 0.8408163265306122
+      }
+    ],
+    "selection_score": -0.938065416557131,
+    "saved": [
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000227_2024",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000227_2025",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000227_2026"
+    ],
+    "finished_utc": "2026-09-15T07:34:27.739987+00:00"
+  },
+  {
+    "id": "final_trial_000648",
+    "config": {
+      "id": "final_trial_000648",
+      "objective": "density",
+      "target": "D15",
+      "horizon": 3,
+      "history": 6,
+      "windows": "short",
+      "exclude_f25": true,
+      "depth": 4,
+      "iterations": 2000,
+      "lr": 0.015,
+      "l2": 3.0,
+      "random_strength": 1.0,
+      "borders": 254,
+      "loss": "RMSE",
+      "positive_weight": 1.0,
+      "seed": 3407,
+      "final": true
+    },
+    "folds": [
+      {
+        "year": 2024,
+        "score": -0.6999843276560722,
+        "validation_mae": 1.6918772556319976,
+        "baseline_mae": 2.8735646214978448,
+        "counts": {
+          "train": 367,
+          "validation": 141,
+          "calibration": 87,
+          "evaluation": 87
+        },
+        "trees": 512,
+        "evaluation_mae": 1.2589372474333467,
+        "evaluation_rmse": 1.5604245577299174,
+        "halfwidth90": 2.0903075731418994,
+        "coverage90": 0.8390804597701149
+      },
+      {
+        "year": 2025,
+        "score": -0.44963528858319535,
+        "validation_mae": 0.9677975252534444,
+        "baseline_mae": 2.1624908447265625,
+        "counts": {
+          "train": 691,
+          "validation": 145,
+          "calibration": 16,
+          "evaluation": 16
+        },
+        "trees": 847,
+        "evaluation_mae": 1.602106751530357,
+        "evaluation_rmse": 2.107362165989108,
+        "halfwidth90": 3.5153451440738763,
+        "coverage90": 0.9375
+      },
+      {
+        "year": 2026,
+        "score": -0.44963528858319535,
+        "validation_mae": 0.9677975252534444,
+        "baseline_mae": 2.3420290739639946,
+        "counts": {
+          "train": 691,
+          "validation": 145,
+          "calibration": 33,
+          "evaluation": 138
+        },
+        "trees": 847,
+        "evaluation_mae": 1.7305159539186326,
+        "evaluation_rmse": 2.7250289928042517,
+        "halfwidth90": 3.121701097658388,
+        "coverage90": 0.8478260869565217
+      }
+    ],
+    "selection_score": -0.5998447120269215,
+    "saved": [
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000648_2024",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000648_2025",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000648_2026"
+    ],
+    "finished_utc": "2026-09-15T07:34:52.429204+00:00"
+  },
+  {
+    "id": "final_trial_000269",
+    "config": {
+      "id": "final_trial_000269",
+      "objective": "flash",
+      "target": "FlashPoint",
+      "horizon": 3,
+      "history": 24,
+      "windows": "long",
+      "exclude_f25": true,
+      "depth": 4,
+      "iterations": 3000,
+      "lr": 0.015,
+      "l2": 30.0,
+      "random_strength": 3.0,
+      "borders": 128,
+      "loss": "RMSE",
+      "positive_weight": 4.0,
+      "seed": 101,
+      "final": true
+    },
+    "folds": [
+      {
+        "year": 2024,
+        "score": -0.6922400973392638,
+        "validation_mae": 4.191324370457135,
+        "baseline_mae": 5.247422680412371,
+        "counts": {
+          "train": 469,
+          "validation": 201,
+          "calibration": 96,
+          "evaluation": 97
+        },
+        "trees": 2174,
+        "evaluation_mae": 2.990477163222272,
+        "evaluation_rmse": 3.810114692381533,
+        "halfwidth90": 6.2408463739574245,
+        "coverage90": 0.9072164948453608
+      },
+      {
+        "year": 2025,
+        "score": -0.5845102609376522,
+        "validation_mae": 2.925503376713199,
+        "baseline_mae": 4.510204081632653,
+        "counts": {
+          "train": 884,
+          "validation": 198,
+          "calibration": 97,
+          "evaluation": 98
+        },
+        "trees": 2058,
+        "evaluation_mae": 2.2043134406825096,
+        "evaluation_rmse": 2.8548706934651413,
+        "halfwidth90": 5.313087008313516,
+        "coverage90": 0.9489795918367347
+      },
+      {
+        "year": 2026,
+        "score": -0.5845102609376522,
+        "validation_mae": 2.925503376713199,
+        "baseline_mae": 4.800884955752212,
+        "counts": {
+          "train": 884,
+          "validation": 198,
+          "calibration": 198,
+          "evaluation": 226
+        },
+        "trees": 2058,
+        "evaluation_mae": 2.71884603440246,
+        "evaluation_rmse": 4.169805131835191,
+        "halfwidth90": 4.868424348402925,
+        "coverage90": 0.8982300884955752
+      }
+    ],
+    "selection_score": -0.6491481627786191,
+    "saved": [
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000269_2024",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000269_2025",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000269_2026"
+    ],
+    "finished_utc": "2026-09-15T07:35:39.371381+00:00"
+  },
+  {
+    "id": "final_trial_000390",
+    "config": {
+      "id": "final_trial_000390",
+      "objective": "risk",
+      "target": "Mg.Sulfur",
+      "horizon": 6,
+      "history": 0,
+      "windows": "long",
+      "exclude_f25": false,
+      "depth": 9,
+      "iterations": 3000,
+      "lr": 0.015,
+      "l2": 10.0,
+      "random_strength": 0.2,
+      "borders": 128,
+      "loss": "RMSE",
+      "positive_weight": 2.0,
+      "seed": 2026,
+      "final": true
+    },
+    "folds": [
+      {
+        "year": 2024,
+        "score": 0.29733482279473467,
+        "validation_ap": 0.29733482279473467,
+        "validation_prevalence": 0.096045197740113,
+        "validation_brier": 0.09288120277199767,
+        "counts": {
+          "train": 406,
+          "validation": 177,
+          "calibration": 99,
+          "evaluation": 99
+        },
+        "trees": 544,
+        "threshold": 0.265,
+        "tp": 0,
+        "fp": 1,
+        "fn": 10,
+        "tn": 88,
+        "evaluation_ap": 0.12910839055246764,
+        "evaluation_prevalence": 0.10101010101010101,
+        "brier": 0.0928977512837701,
+        "baseline_brier": 0.1000296345973261
+      },
+      {
+        "year": 2025,
+        "score": 0.17211347827241205,
+        "validation_ap": 0.17211347827241205,
+        "validation_prevalence": 0.16842105263157894,
+        "validation_brier": 0.15439998972658278,
+        "counts": {
+          "train": 792,
+          "validation": 190,
+          "calibration": 99,
+          "evaluation": 119
+        },
+        "trees": 58,
+        "threshold": 0.39,
+        "tp": 0,
+        "fp": 0,
+        "fn": 26,
+        "tn": 93,
+        "evaluation_ap": 0.1851666598230991,
+        "evaluation_prevalence": 0.2184873949579832,
+        "brier": 0.177225851447879,
+        "baseline_brier": 0.1755805551482914
+      },
+      {
+        "year": 2026,
+        "score": 0.17211347827241205,
+        "validation_ap": 0.17211347827241205,
+        "validation_prevalence": 0.16842105263157894,
+        "validation_brier": 0.15439998972658278,
+        "counts": {
+          "train": 792,
+          "validation": 190,
+          "calibration": 221,
+          "evaluation": 245
+        },
+        "trees": 58,
+        "threshold": 0.325,
+        "tp": 12,
+        "fp": 47,
+        "fn": 23,
+        "tn": 163,
+        "evaluation_ap": 0.20424970398415096,
+        "evaluation_prevalence": 0.14285714285714285,
+        "brier": 0.14909718177842682,
+        "baseline_brier": 0.12248659028962063
+      }
+    ],
+    "selection_score": 0.2222020160813411,
+    "saved": [
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000390_2024",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000390_2025",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000390_2026"
+    ],
+    "finished_utc": "2026-09-15T07:38:52.105896+00:00"
+  },
+  {
+    "id": "final_trial_000211",
+    "config": {
+      "id": "final_trial_000211",
+      "objective": "sulfur",
+      "target": "Mg.Sulfur",
+      "horizon": 6,
+      "history": 6,
+      "windows": "short",
+      "exclude_f25": true,
+      "depth": 7,
+      "iterations": 3000,
+      "lr": 0.05,
+      "l2": 10.0,
+      "random_strength": 1.0,
+      "borders": 128,
+      "loss": "MAE",
+      "positive_weight": 1.0,
+      "seed": 42,
+      "final": true
+    },
+    "folds": [
+      {
+        "year": 2024,
+        "score": -0.9944019948312444,
+        "validation_mae": 14.602540482977147,
+        "baseline_mae": 1.5969697176808058,
+        "counts": {
+          "train": 406,
+          "validation": 177,
+          "calibration": 99,
+          "evaluation": 99
+        },
+        "trees": 607,
+        "evaluation_mae": 1.548095893833508,
+        "evaluation_rmse": 1.9919513535167692,
+        "halfwidth90": 3.923251269159664,
+        "coverage90": 0.9494949494949495
+      },
+      {
+        "year": 2025,
+        "score": -0.9467814921681083,
+        "validation_mae": 1.4351213971344183,
+        "baseline_mae": 1.285714257665041,
+        "counts": {
+          "train": 792,
+          "validation": 190,
+          "calibration": 99,
+          "evaluation": 119
+        },
+        "trees": 493,
+        "evaluation_mae": 1.3185650233314212,
+        "evaluation_rmse": 1.6092617896629742,
+        "halfwidth90": 3.350305392526934,
+        "coverage90": 0.9747899159663865
+      },
+      {
+        "year": 2026,
+        "score": -0.9467814921681083,
+        "validation_mae": 1.4351213971344183,
+        "baseline_mae": 1.6799999872944793,
+        "counts": {
+          "train": 792,
+          "validation": 190,
+          "calibration": 221,
+          "evaluation": 245
+        },
+        "trees": 493,
+        "evaluation_mae": 1.6548012792056621,
+        "evaluation_rmse": 2.428874453521353,
+        "halfwidth90": 2.697646247484954,
+        "coverage90": 0.8408163265306122
+      }
+    ],
+    "selection_score": -0.9753537937659899,
+    "saved": [
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000211_2024",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000211_2025",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000211_2026"
+    ],
+    "finished_utc": "2026-09-15T07:39:30.209942+00:00"
+  },
+  {
+    "id": "final_trial_000212",
+    "config": {
+      "id": "final_trial_000212",
+      "objective": "sulfur_log",
+      "target": "Mg.Sulfur",
+      "horizon": 6,
+      "history": 24,
+      "windows": "long",
+      "exclude_f25": false,
+      "depth": 7,
+      "iterations": 3000,
+      "lr": 0.08,
+      "l2": 30.0,
+      "random_strength": 1.0,
+      "borders": 254,
+      "loss": "RMSE",
+      "positive_weight": 4.0,
+      "seed": 42,
+      "final": true
+    },
+    "folds": [
+      {
+        "year": 2024,
+        "score": -0.9861831382444397,
+        "validation_mae": 14.481848663515375,
+        "baseline_mae": 1.5969697176808058,
+        "counts": {
+          "train": 406,
+          "validation": 177,
+          "calibration": 99,
+          "evaluation": 99
+        },
+        "trees": 1205,
+        "evaluation_mae": 1.4779050417344328,
+        "evaluation_rmse": 1.8763086611601123,
+        "halfwidth90": 3.445463211007592,
+        "coverage90": 0.9292929292929293
+      },
+      {
+        "year": 2025,
+        "score": -0.9125521380718497,
+        "validation_mae": 1.3832369033203915,
+        "baseline_mae": 1.285714257665041,
+        "counts": {
+          "train": 792,
+          "validation": 190,
+          "calibration": 99,
+          "evaluation": 119
+        },
+        "trees": 158,
+        "evaluation_mae": 1.3758900539128773,
+        "evaluation_rmse": 1.6606855416385284,
+        "halfwidth90": 3.0476352532152973,
+        "coverage90": 0.957983193277311
+      },
+      {
+        "year": 2026,
+        "score": -0.9125521380718497,
+        "validation_mae": 1.3832369033203915,
+        "baseline_mae": 1.6799999872944793,
+        "counts": {
+          "train": 792,
+          "validation": 190,
+          "calibration": 221,
+          "evaluation": 245
+        },
+        "trees": 158,
+        "evaluation_mae": 1.669260538607605,
+        "evaluation_rmse": 2.458822671767176,
+        "halfwidth90": 2.647577506980773,
+        "coverage90": 0.8163265306122449
+      }
+    ],
+    "selection_score": -0.9567307381754037,
+    "saved": [
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000212_2024",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000212_2025",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000212_2026"
+    ],
+    "finished_utc": "2026-09-15T07:40:35.611386+00:00"
+  },
+  {
+    "id": "final_trial_000293",
+    "config": {
+      "id": "final_trial_000293",
+      "objective": "density",
+      "target": "D15",
+      "horizon": 6,
+      "history": 6,
+      "windows": "short",
+      "exclude_f25": true,
+      "depth": 5,
+      "iterations": 2000,
+      "lr": 0.03,
+      "l2": 30.0,
+      "random_strength": 0.2,
+      "borders": 254,
+      "loss": "RMSE",
+      "positive_weight": 4.0,
+      "seed": 2026,
+      "final": true
+    },
+    "folds": [
+      {
+        "year": 2024,
+        "score": -0.7305237968657173,
+        "validation_mae": 1.7656918130634307,
+        "baseline_mae": 2.8735646214978448,
+        "counts": {
+          "train": 367,
+          "validation": 141,
+          "calibration": 87,
+          "evaluation": 87
+        },
+        "trees": 275,
+        "evaluation_mae": 1.364298488476954,
+        "evaluation_rmse": 1.722231104728289,
+        "halfwidth90": 2.2693302825191495,
+        "coverage90": 0.8045977011494253
+      },
+      {
+        "year": 2025,
+        "score": -0.4438173671812991,
+        "validation_mae": 0.9552749984904401,
+        "baseline_mae": 2.1624908447265625,
+        "counts": {
+          "train": 691,
+          "validation": 145,
+          "calibration": 16,
+          "evaluation": 16
+        },
+        "trees": 436,
+        "evaluation_mae": 1.552866591985989,
+        "evaluation_rmse": 2.1114729955952733,
+        "halfwidth90": 2.793735419318864,
+        "coverage90": 0.875
+      },
+      {
+        "year": 2026,
+        "score": -0.4438173671812991,
+        "validation_mae": 0.9552749984904401,
+        "baseline_mae": 2.3420290739639946,
+        "counts": {
+          "train": 691,
+          "validation": 145,
+          "calibration": 33,
+          "evaluation": 138
+        },
+        "trees": 436,
+        "evaluation_mae": 1.8068114085136764,
+        "evaluation_rmse": 2.871499608294164,
+        "halfwidth90": 2.793735419318864,
+        "coverage90": 0.8115942028985508
+      }
+    ],
+    "selection_score": -0.61584122499195,
+    "saved": [
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000293_2024",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000293_2025",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000293_2026"
+    ],
+    "finished_utc": "2026-09-15T07:40:57.942320+00:00"
+  },
+  {
+    "id": "final_trial_000834",
+    "config": {
+      "id": "final_trial_000834",
+      "objective": "flash",
+      "target": "FlashPoint",
+      "horizon": 6,
+      "history": 48,
+      "windows": "short",
+      "exclude_f25": true,
+      "depth": 5,
+      "iterations": 3000,
+      "lr": 0.015,
+      "l2": 10.0,
+      "random_strength": 3.0,
+      "borders": 254,
+      "loss": "RMSE",
+      "positive_weight": 8.0,
+      "seed": 42,
+      "final": true
+    },
+    "folds": [
+      {
+        "year": 2024,
+        "score": -0.7563009114295314,
+        "validation_mae": 4.5791950706952225,
+        "baseline_mae": 5.247422680412371,
+        "counts": {
+          "train": 469,
+          "validation": 201,
+          "calibration": 96,
+          "evaluation": 97
+        },
+        "trees": 611,
+        "evaluation_mae": 3.077782934576437,
+        "evaluation_rmse": 3.8903162471797414,
+        "halfwidth90": 6.593835593266704,
+        "coverage90": 0.8865979381443299
+      },
+      {
+        "year": 2025,
+        "score": -0.6261157232318683,
+        "validation_mae": 3.1337408167817244,
+        "baseline_mae": 4.510204081632653,
+        "counts": {
+          "train": 884,
+          "validation": 198,
+          "calibration": 97,
+          "evaluation": 98
+        },
+        "trees": 954,
+        "evaluation_mae": 2.308189617022742,
+        "evaluation_rmse": 2.9526944517347893,
+        "halfwidth90": 5.713598973199737,
+        "coverage90": 0.9591836734693877
+      },
+      {
+        "year": 2026,
+        "score": -0.6261157232318683,
+        "validation_mae": 3.1337408167817244,
+        "baseline_mae": 4.800884955752212,
+        "counts": {
+          "train": 884,
+          "validation": 198,
+          "calibration": 198,
+          "evaluation": 226
+        },
+        "trees": 954,
+        "evaluation_mae": 3.0720987682008674,
+        "evaluation_rmse": 4.665753126281976,
+        "halfwidth90": 4.803303397458876,
+        "coverage90": 0.8584070796460177
+      }
+    ],
+    "selection_score": -0.7042268361504661,
+    "saved": [
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000834_2024",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000834_2025",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000834_2026"
+    ],
+    "finished_utc": "2026-09-15T07:41:32.457380+00:00"
+  },
+  {
+    "id": "final_trial_000715",
+    "config": {
+      "id": "final_trial_000715",
+      "objective": "risk",
+      "target": "Mg.Sulfur",
+      "horizon": 12,
+      "history": 0,
+      "windows": "all",
+      "exclude_f25": false,
+      "depth": 4,
+      "iterations": 1200,
+      "lr": 0.08,
+      "l2": 100.0,
+      "random_strength": 3.0,
+      "borders": 254,
+      "loss": "RMSE",
+      "positive_weight": 1.0,
+      "seed": 101,
+      "final": true
+    },
+    "folds": [
+      {
+        "year": 2024,
+        "score": 0.3000768460993293,
+        "validation_ap": 0.3000768460993293,
+        "validation_prevalence": 0.096045197740113,
+        "validation_brier": 0.1034860939841497,
+        "counts": {
+          "train": 405,
+          "validation": 177,
+          "calibration": 99,
+          "evaluation": 99
+        },
+        "trees": 70,
+        "threshold": 0.28500000000000003,
+        "tp": 0,
+        "fp": 2,
+        "fn": 10,
+        "tn": 87,
+        "evaluation_ap": 0.10212780832643018,
+        "evaluation_prevalence": 0.10101010101010101,
+        "brier": 0.09847527028721863,
+        "baseline_brier": 0.10012331823031415
+      },
+      {
+        "year": 2025,
+        "score": 0.24411062177727116,
+        "validation_ap": 0.24411062177727116,
+        "validation_prevalence": 0.16842105263157894,
+        "validation_brier": 0.13940626721535107,
+        "counts": {
+          "train": 791,
+          "validation": 190,
+          "calibration": 99,
+          "evaluation": 119
+        },
+        "trees": 21,
+        "threshold": 0.2,
+        "tp": 4,
+        "fp": 6,
+        "fn": 22,
+        "tn": 87,
+        "evaluation_ap": 0.3045718231243417,
+        "evaluation_prevalence": 0.2184873949579832,
+        "brier": 0.17151702586837783,
+        "baseline_brier": 0.17555441003247566
+      },
+      {
+        "year": 2026,
+        "score": 0.24411062177727116,
+        "validation_ap": 0.24411062177727116,
+        "validation_prevalence": 0.16842105263157894,
+        "validation_brier": 0.13940626721535107,
+        "counts": {
+          "train": 791,
+          "validation": 190,
+          "calibration": 221,
+          "evaluation": 246
+        },
+        "trees": 21,
+        "threshold": 0.2,
+        "tp": 6,
+        "fp": 36,
+        "fn": 29,
+        "tn": 175,
+        "evaluation_ap": 0.1449360695812519,
+        "evaluation_prevalence": 0.14227642276422764,
+        "brier": 0.12866246241744628,
+        "baseline_brier": 0.12208147758300118
+      }
+    ],
+    "selection_score": 0.2664971115060944,
+    "saved": [
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000715_2024",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000715_2025",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000715_2026"
+    ],
+    "finished_utc": "2026-09-15T07:41:49.122380+00:00"
+  },
+  {
+    "id": "final_trial_000416",
+    "config": {
+      "id": "final_trial_000416",
+      "objective": "sulfur",
+      "target": "Mg.Sulfur",
+      "horizon": 12,
+      "history": 48,
+      "windows": "all",
+      "exclude_f25": true,
+      "depth": 4,
+      "iterations": 2000,
+      "lr": 0.03,
+      "l2": 10.0,
+      "random_strength": 3.0,
+      "borders": 254,
+      "loss": "MAE",
+      "positive_weight": 8.0,
+      "seed": 3407,
+      "final": true
+    },
+    "folds": [
+      {
+        "year": 2024,
+        "score": -0.9998819709232178,
+        "validation_mae": 14.683012538689756,
+        "baseline_mae": 1.5969697176808058,
+        "counts": {
+          "train": 405,
+          "validation": 177,
+          "calibration": 99,
+          "evaluation": 99
+        },
+        "trees": 174,
+        "evaluation_mae": 1.5876520374895886,
+        "evaluation_rmse": 2.0261170183463206,
+        "halfwidth90": 4.082225189591554,
+        "coverage90": 0.9696969696969697
+      },
+      {
+        "year": 2025,
+        "score": -0.9594589738427427,
+        "validation_mae": 1.454337790107399,
+        "baseline_mae": 1.285714257665041,
+        "counts": {
+          "train": 791,
+          "validation": 190,
+          "calibration": 99,
+          "evaluation": 119
+        },
+        "trees": 846,
+        "evaluation_mae": 1.3644097923048826,
+        "evaluation_rmse": 1.6549200440167922,
+        "halfwidth90": 3.5483048306796263,
+        "coverage90": 0.9747899159663865
+      },
+      {
+        "year": 2026,
+        "score": -0.9594589738427427,
+        "validation_mae": 1.454337790107399,
+        "baseline_mae": 1.6780487670585877,
+        "counts": {
+          "train": 791,
+          "validation": 190,
+          "calibration": 221,
+          "evaluation": 246
+        },
+        "trees": 846,
+        "evaluation_mae": 1.6606342022027596,
+        "evaluation_rmse": 2.4419707830368713,
+        "halfwidth90": 2.8464888526268624,
+        "coverage90": 0.8414634146341463
+      }
+    ],
+    "selection_score": -0.9837127720910278,
+    "saved": [
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000416_2024",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000416_2025",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000416_2026"
+    ],
+    "finished_utc": "2026-09-15T07:42:16.184662+00:00"
+  },
+  {
+    "id": "final_trial_000417",
+    "config": {
+      "id": "final_trial_000417",
+      "objective": "sulfur_log",
+      "target": "Mg.Sulfur",
+      "horizon": 12,
+      "history": 48,
+      "windows": "long",
+      "exclude_f25": false,
+      "depth": 4,
+      "iterations": 1200,
+      "lr": 0.05,
+      "l2": 3.0,
+      "random_strength": 1.0,
+      "borders": 64,
+      "loss": "RMSE",
+      "positive_weight": 2.0,
+      "seed": 2026,
+      "final": true
+    },
+    "folds": [
+      {
+        "year": 2024,
+        "score": -0.9950134674282447,
+        "validation_mae": 14.611519802606773,
+        "baseline_mae": 1.5969697176808058,
+        "counts": {
+          "train": 405,
+          "validation": 177,
+          "calibration": 99,
+          "evaluation": 99
+        },
+        "trees": 19,
+        "evaluation_mae": 1.528626983917239,
+        "evaluation_rmse": 1.9604741171717546,
+        "halfwidth90": 3.813426199878702,
+        "coverage90": 0.9595959595959596
+      },
+      {
+        "year": 2025,
+        "score": -0.9210606777003683,
+        "validation_mae": 1.3961340579228656,
+        "baseline_mae": 1.285714257665041,
+        "counts": {
+          "train": 791,
+          "validation": 190,
+          "calibration": 99,
+          "evaluation": 119
+        },
+        "trees": 661,
+        "evaluation_mae": 1.3347820346269361,
+        "evaluation_rmse": 1.6543841439533111,
+        "halfwidth90": 3.3644189490426886,
+        "coverage90": 0.957983193277311
+      },
+      {
+        "year": 2026,
+        "score": -0.9210606777003683,
+        "validation_mae": 1.3961340579228656,
+        "baseline_mae": 1.6780487670585877,
+        "counts": {
+          "train": 791,
+          "validation": 190,
+          "calibration": 221,
+          "evaluation": 246
+        },
+        "trees": 661,
+        "evaluation_mae": 1.9341562532179586,
+        "evaluation_rmse": 3.563310016780617,
+        "halfwidth90": 2.850077022551658,
+        "coverage90": 0.8373983739837398
+      }
+    ],
+    "selection_score": -0.9654323515370942,
+    "saved": [
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000417_2024",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000417_2025",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000417_2026"
+    ],
+    "finished_utc": "2026-09-15T07:42:32.547082+00:00"
+  },
+  {
+    "id": "final_trial_000018",
+    "config": {
+      "id": "final_trial_000018",
+      "objective": "density",
+      "target": "D15",
+      "horizon": 12,
+      "history": 6,
+      "windows": "long",
+      "exclude_f25": true,
+      "depth": 4,
+      "iterations": 3000,
+      "lr": 0.03,
+      "l2": 10.0,
+      "random_strength": 3.0,
+      "borders": 254,
+      "loss": "MAE",
+      "positive_weight": 8.0,
+      "seed": 17,
+      "final": true
+    },
+    "folds": [
+      {
+        "year": 2024,
+        "score": -0.719590395734827,
+        "validation_mae": 1.7392655461182895,
+        "baseline_mae": 2.8735646214978448,
+        "counts": {
+          "train": 366,
+          "validation": 141,
+          "calibration": 87,
+          "evaluation": 87
+        },
+        "trees": 786,
+        "evaluation_mae": 1.366612225333891,
+        "evaluation_rmse": 1.7079860242254221,
+        "halfwidth90": 2.3397682393697323,
+        "coverage90": 0.8160919540229885
+      },
+      {
+        "year": 2025,
+        "score": -0.5341960107393039,
+        "validation_mae": 1.1498064994471673,
+        "baseline_mae": 2.1624908447265625,
+        "counts": {
+          "train": 690,
+          "validation": 145,
+          "calibration": 16,
+          "evaluation": 16
+        },
+        "trees": 1772,
+        "evaluation_mae": 1.5332392648895166,
+        "evaluation_rmse": 2.018456855592978,
+        "halfwidth90": 3.7381387556870322,
+        "coverage90": 0.9375
+      },
+      {
+        "year": 2026,
+        "score": -0.5341960107393039,
+        "validation_mae": 1.1498064994471673,
+        "baseline_mae": 2.341726618705036,
+        "counts": {
+          "train": 690,
+          "validation": 145,
+          "calibration": 33,
+          "evaluation": 139
+        },
+        "trees": 1772,
+        "evaluation_mae": 1.7896978759770117,
+        "evaluation_rmse": 2.998548556637827,
+        "halfwidth90": 3.2502235064657725,
+        "coverage90": 0.8561151079136691
+      }
+    ],
+    "selection_score": -0.6454326417366177,
+    "saved": [
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000018_2024",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000018_2025",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000018_2026"
+    ],
+    "finished_utc": "2026-09-15T07:43:12.621327+00:00"
+  },
+  {
+    "id": "final_trial_000219",
+    "config": {
+      "id": "final_trial_000219",
+      "objective": "flash",
+      "target": "FlashPoint",
+      "horizon": 12,
+      "history": 0,
+      "windows": "short",
+      "exclude_f25": false,
+      "depth": 7,
+      "iterations": 1200,
+      "lr": 0.05,
+      "l2": 3.0,
+      "random_strength": 3.0,
+      "borders": 128,
+      "loss": "MAE",
+      "positive_weight": 8.0,
+      "seed": 2026,
+      "final": true
+    },
+    "folds": [
+      {
+        "year": 2024,
+        "score": -0.7937187468894918,
+        "validation_mae": 4.805749825694088,
+        "baseline_mae": 5.247422680412371,
+        "counts": {
+          "train": 468,
+          "validation": 201,
+          "calibration": 96,
+          "evaluation": 97
+        },
+        "trees": 1199,
+        "evaluation_mae": 3.288620931355759,
+        "evaluation_rmse": 4.256291846798517,
+        "halfwidth90": 6.604010789356835,
+        "coverage90": 0.8865979381443299
+      },
+      {
+        "year": 2025,
+        "score": -0.7084279672131057,
+        "validation_mae": 3.5457177550918577,
+        "baseline_mae": 4.510204081632653,
+        "counts": {
+          "train": 883,
+          "validation": 198,
+          "calibration": 97,
+          "evaluation": 98
+        },
+        "trees": 1197,
+        "evaluation_mae": 2.6479808541800076,
+        "evaluation_rmse": 3.4783517450063033,
+        "halfwidth90": 6.324618560778617,
+        "coverage90": 0.9183673469387755
+      },
+      {
+        "year": 2026,
+        "score": -0.7084279672131057,
+        "validation_mae": 3.5457177550918577,
+        "baseline_mae": 4.797356828193832,
+        "counts": {
+          "train": 883,
+          "validation": 198,
+          "calibration": 198,
+          "evaluation": 227
+        },
+        "trees": 1197,
+        "evaluation_mae": 3.34653451701223,
+        "evaluation_rmse": 4.829806158129902,
+        "halfwidth90": 5.834782902551524,
+        "coverage90": 0.8678414096916299
+      }
+    ],
+    "selection_score": -0.7596024350189374,
+    "saved": [
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000219_2024",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000219_2025",
+      "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_13h/final/final_trial_000219_2026"
+    ],
+    "finished_utc": "2026-09-15T07:44:15.017049+00:00"
+  }
+]

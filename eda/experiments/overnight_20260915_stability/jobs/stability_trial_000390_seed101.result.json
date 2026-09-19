@@ -1,0 +1,101 @@
+{
+  "id": "stability_trial_000390_seed101",
+  "config": {
+    "id": "stability_trial_000390_seed101",
+    "objective": "risk",
+    "target": "Mg.Sulfur",
+    "horizon": 6,
+    "history": 0,
+    "windows": "long",
+    "exclude_f25": false,
+    "depth": 9,
+    "iterations": 3000,
+    "lr": 0.015,
+    "l2": 10.0,
+    "random_strength": 0.2,
+    "borders": 128,
+    "loss": "RMSE",
+    "positive_weight": 2.0,
+    "seed": 101,
+    "final": true,
+    "role": "stability"
+  },
+  "folds": [
+    {
+      "year": 2024,
+      "score": 0.2532948996881541,
+      "validation_ap": 0.2532948996881541,
+      "validation_prevalence": 0.096045197740113,
+      "validation_brier": 0.09134411488203474,
+      "counts": {
+        "train": 406,
+        "validation": 177,
+        "calibration": 99,
+        "evaluation": 99
+      },
+      "trees": 750,
+      "threshold": 0.25,
+      "tp": 0,
+      "fp": 3,
+      "fn": 10,
+      "tn": 86,
+      "evaluation_ap": 0.09225986784809329,
+      "evaluation_prevalence": 0.10101010101010101,
+      "brier": 0.09767884696314988,
+      "baseline_brier": 0.1000296345973261
+    },
+    {
+      "year": 2025,
+      "score": 0.17152655201855027,
+      "validation_ap": 0.17152655201855027,
+      "validation_prevalence": 0.16842105263157894,
+      "validation_brier": 0.16420891930495551,
+      "counts": {
+        "train": 792,
+        "validation": 190,
+        "calibration": 99,
+        "evaluation": 119
+      },
+      "trees": 44,
+      "threshold": 0.405,
+      "tp": 0,
+      "fp": 0,
+      "fn": 26,
+      "tn": 93,
+      "evaluation_ap": 0.23716172015694553,
+      "evaluation_prevalence": 0.2184873949579832,
+      "brier": 0.18267662098246548,
+      "baseline_brier": 0.1755805551482914
+    },
+    {
+      "year": 2026,
+      "score": 0.17152655201855027,
+      "validation_ap": 0.17152655201855027,
+      "validation_prevalence": 0.16842105263157894,
+      "validation_brier": 0.16420891930495551,
+      "counts": {
+        "train": 792,
+        "validation": 190,
+        "calibration": 221,
+        "evaluation": 245
+      },
+      "trees": 44,
+      "threshold": 0.355,
+      "tp": 14,
+      "fp": 69,
+      "fn": 21,
+      "tn": 141,
+      "evaluation_ap": 0.16090335749361057,
+      "evaluation_prevalence": 0.14285714285714285,
+      "brier": 0.1643972822422988,
+      "baseline_brier": 0.12248659028962063
+    }
+  ],
+  "selection_score": 0.2042338910863918,
+  "saved": [
+    "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_stability/final/stability_trial_000390_seed101_2024",
+    "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_stability/final/stability_trial_000390_seed101_2025",
+    "/home/faizov/projects/NEFTECODE2026/eda/experiments/overnight_20260915_stability/final/stability_trial_000390_seed101_2026"
+  ],
+  "finished_utc": "2026-09-15T08:16:16.649404+00:00"
+}

@@ -1,0 +1,18 @@
+{
+  "id": "trial_000519",
+  "objective": "flash",
+  "target": "FlashPoint",
+  "horizon": 12,
+  "history": 24,
+  "windows": "long",
+  "exclude_f25": true,
+  "depth": 6,
+  "iterations": 3000,
+  "lr": 0.03,
+  "l2": 30.0,
+  "random_strength": 0.2,
+  "borders": 128,
+  "loss": "RMSE",
+  "positive_weight": 4.0,
+  "seed": 3407
+}
