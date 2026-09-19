@@ -3,15 +3,18 @@
 <div align="center">
 
 ![Status](https://img.shields.io/badge/статус-production--ready-success)
-![h=1](https://img.shields.io/badge/h=1-MAE%201.2%20ppm-blue)
-![h=2](https://img.shields.io/badge/h=2-MAE%201.8%20ppm-blue)
-![h=3](https://img.shields.io/badge/h=3-MAE%202.3%20ppm-blue)
-![h=4](https://img.shields.io/badge/h=4-MAE%202.7%20ppm-blue)
-![h=5](https://img.shields.io/badge/h=5-MAE%203.1%20ppm-blue)
 ![Coverage](https://img.shields.io/badge/покрытие-85%25+-brightgreen)
 ![Tech](https://img.shields.io/badge/Python%203.11%20%7C%20FastAPI%20%7C%20XGBoost-orange)
 
 **Мультиагентная система прогнозирования качества дизельного топлива**
+
+| Горизонт прогноза | MAE |
+|-------------------|-----|
+| 1 час | 1.2 ppm |
+| 2 часа | 1.8 ppm |
+| 3 часа | 2.3 ppm |
+| 4 часа | 2.7 ppm |
+| 5 часов | 3.1 ppm |
 
 [Быстрый старт](#быстрый-старт) • [Архитектура](#архитектура-системы) • [Метрики](#метрики-качества-моделей) • [Документация](#документация)
 
@@ -275,13 +278,13 @@ curl -X POST http://localhost:8000/anomaly/detect \
 
 ### Shadow Pipeline Performance по горизонтам
 
-| Горизонт | MAE | RMSE | Coverage | Inference |
-|----------|-----|------|----------|-----------|
-| +1 час | 1.2 ppm | 1.8 ppm | 89% | 0.5 сек |
-| +2 часа | 1.8 ppm | 2.4 ppm | 87% | 0.6 сек |
-| +3 часа | 2.3 ppm | 3.1 ppm | 85% | 0.7 сек |
-| +4 часа | 2.7 ppm | 3.6 ppm | 83% | 0.8 сек |
-| +5 часов | 3.1 ppm | 4.2 ppm | 81% | 0.9 сек |
+| Горизонт прогноза | MAE | RMSE | Coverage | Inference Time |
+|-------------------|-----|------|----------|----------------|
+| 1 час | 1.2 ppm | 1.8 ppm | 89% | 0.5 сек |
+| 2 часа | 1.8 ppm | 2.4 ppm | 87% | 0.6 сек |
+| 3 часа | 2.3 ppm | 3.1 ppm | 85% | 0.7 сек |
+| 4 часа | 2.7 ppm | 3.6 ppm | 83% | 0.8 сек |
+| 5 часов | 3.1 ppm | 4.2 ppm | 81% | 0.9 сек |
 | Средний | 2.2 ppm | 3.0 ppm | 85%+ | <1 сек |
 
 Метрики:
