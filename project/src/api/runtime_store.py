@@ -136,10 +136,13 @@ class RuntimeStore:
                 actor=actor,
             ))
 
-    def decisions(self, limit: int = 50) -> list[dict[str, Any]]:
+    def decisions(self, limit: int = 50, recommendation_type: str | None = None) -> list[dict[str, Any]]:
+        query = select(DecisionRecord)
+        if recommendation_type is not None:
+            query = query.where(DecisionRecord.recommendation_type == recommendation_type)
         with self.Session() as session:
             rows = session.scalars(
-                select(DecisionRecord).order_by(desc(DecisionRecord.timestamp)).limit(limit)
+                query.order_by(desc(DecisionRecord.timestamp)).limit(limit)
             ).all()
         return [
             {
@@ -153,8 +156,8 @@ class RuntimeStore:
             for row in rows
         ]
 
-    def latest_decision(self) -> dict[str, Any] | None:
-        rows = self.decisions(limit=1)
+    def latest_decision(self, recommendation_type: str | None = None) -> dict[str, Any] | None:
+        rows = self.decisions(limit=1, recommendation_type=recommendation_type)
         return rows[0] if rows else None
 
     def decision_by_request_id(self, request_id: str) -> dict[str, Any] | None:

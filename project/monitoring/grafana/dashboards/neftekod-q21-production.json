@@ -149,6 +149,7 @@
               { "color": "red", "value": 3 }
             ]
           },
+          "noValue": "Нет закрытых прогнозов",
           "unit": "ppm"
         },
         "overrides": []
@@ -156,7 +157,7 @@
       "gridPos": { "h": 6, "w": 6, "x": 18, "y": 0 },
       "id": 4,
       "options": {
-        "colorMode": "value",
+        "colorMode": "none",
         "graphMode": "area",
         "justifyMode": "center",
         "orientation": "horizontal",
@@ -167,14 +168,14 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "neftekod_q21_shadow_mae_ppm",
+          "expr": "neftekod_q21_shadow_mae_ppm and on() (neftekod_q21_shadow_closed_total > 0)",
           "instant": true,
           "legendFormat": "MAE",
           "range": false,
           "refId": "A"
         }
       ],
-      "title": "Shadow MAE · h=1",
+      "title": "Shadow MAE · после закрытия прогноза",
       "type": "stat"
     },
     {
@@ -265,6 +266,7 @@
               { "color": "red", "value": 0.85 }
             ]
           },
+          "noValue": "Нет закрытых прогнозов",
           "unit": "percentunit"
         },
         "overrides": []
@@ -272,7 +274,7 @@
       "gridPos": { "h": 8, "w": 8, "x": 0, "y": 16 },
       "id": 6,
       "options": {
-        "colorMode": "value",
+        "colorMode": "none",
         "graphMode": "area",
         "justifyMode": "center",
         "orientation": "auto",
@@ -283,7 +285,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "neftekod_q21_shadow_coverage",
+          "expr": "neftekod_q21_shadow_coverage and on() (neftekod_q21_shadow_closed_total > 0)",
           "instant": true,
           "legendFormat": "Coverage",
           "range": false,
@@ -484,14 +486,14 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "neftekod_q21_shadow_predictions_count",
+          "expr": "neftekod_q21_shadow_predictions_total",
           "legendFormat": "Выполнено прогнозов",
           "range": true,
           "refId": "A"
         },
         {
           "editorMode": "code",
-          "expr": "neftekod_q21_shadow_closed_count",
+          "expr": "neftekod_q21_shadow_closed_total",
           "legendFormat": "Закрыто фактом",
           "range": true,
           "refId": "B"

@@ -20,6 +20,11 @@ def test_runtime_store_persists_decision_and_telemetry(tmp_path):
     assert store.recent_telemetry()[0]["timestamp"].utcoffset() == timedelta(0)
     assert store.latest_decision()["data"]["reason"] == "warmup"
     assert store.latest_decision()["timestamp"].utcoffset() == timedelta(0)
+    store.save_decision("decision-2", now + timedelta(seconds=1), "q21_shadow",
+                        {"q21_current": 8.4, "exceedance_probability": 0.2}, "request-2", "test")
+    store.save_decision("decision-3", now + timedelta(seconds=2), "abstain", {}, "request-3", "test")
+    assert store.latest_decision("q21_shadow")["data"]["exceedance_probability"] == 0.2
+    assert store.latest_decision()["decision_id"] == "decision-3"
 
 
 def test_runtime_store_persists_q21_history_forecasts_and_outcomes(tmp_path):

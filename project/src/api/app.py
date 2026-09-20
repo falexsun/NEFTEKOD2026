@@ -180,7 +180,6 @@ def _init_runtime():
     FEATURE_BUFFER_POINTS.set(_feature_buffer.history_size)
     RUNTIME_READY.set(0)
     SURROGATE_READY.set(1 if surrogate.is_available else 0)
-    Q21_SHADOW_READY.set(1 if _q21_system else 0)
 
     logger.info(
         f"Runtime initialized: quality_ready={qa.is_ready}, "
@@ -201,6 +200,30 @@ def _init_runtime():
         _q21_system = None
         _q21_error = str(exc)
         logger.warning("Q21 h=1 bundle unavailable: %s", exc)
+    Q21_SHADOW_READY.set(1 if _q21_system else 0)
+    if _runtime_store:
+        try:
+            q21_history = _runtime_store.recent_q21_points(limit=145)
+            Q21_BUFFER_POINTS.set(len(q21_history))
+            if q21_history:
+                latest_q21 = q21_history[-1]
+                age_minutes = max(0.0, (utc_now() - _as_utc(latest_q21["timestamp"])).total_seconds() / 60)
+                Q21_DATA_FRESHNESS.set(age_minutes)
+                if age_minutes <= 30:
+                    Q21_CURRENT_PPM.set(latest_q21["Q21"])
+                    previous_forecast = _runtime_store.latest_q21_forecast()
+                    if previous_forecast and previous_forecast["origin_timestamp"] == latest_q21["timestamp"]:
+                        for forecast in previous_forecast["forecasts"]:
+                            if forecast["horizon_hours"] == 1.0:
+                                Q21_FORECAST_1H_PPM.set(forecast["q21"])
+                                break
+                    previous_decision = _runtime_store.latest_decision("q21_shadow")
+                    if previous_decision and previous_decision["recommendation_type"] == "q21_shadow":
+                        risk = previous_decision["data"].get("exceedance_probability")
+                        if risk is not None and previous_decision["data"].get("q21_current") == latest_q21["Q21"]:
+                            Q21_EXCEEDANCE_PROBABILITY.set(risk)
+        except Exception as exc:
+            logger.warning("Could not restore Q21 monitoring gauges: %s", exc)
 
     # Initialize new components
     _anomaly_detector = get_anomaly_detector()
