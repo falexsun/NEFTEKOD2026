@@ -67,6 +67,7 @@ export type Control = {
   confidence: 'high' | 'medium' | 'low'
   current: number | null
   available: boolean
+  availability_reason?: string | null
 }
 
 export type ScenarioResult = {
@@ -112,6 +113,7 @@ export type Q21Runtime = {
   points: number
   required_points: number
   latest_point: ({ timestamp: string; Q21: number; operating_mode: string } & Record<string, unknown>) | null
+  history: Array<{ timestamp: string; q21: number }>
   latest_forecast: {
     origin_timestamp: string
     forecast_id: string

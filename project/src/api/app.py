@@ -13,6 +13,7 @@ Fixes:
 from __future__ import annotations
 
 import logging
+import math
 import os
 import time
 import uuid
@@ -505,6 +506,7 @@ async def make_decision(
                 "avt": _as_utc(payload.avt_timestamp or ts).isoformat(),
                 "u24": _as_utc(payload.u24_timestamp or ts).isoformat(),
                 "pak": _as_utc(payload.pak_sulfur_timestamp).isoformat() if payload.pak_sulfur_timestamp else None,
+                "pak_density": _as_utc(payload.pak_density_timestamp).isoformat() if payload.pak_density_timestamp else None,
                 "lims": _as_utc(payload.lims_timestamp).isoformat() if payload.lims_timestamp else None,
             },
         })
@@ -677,6 +679,10 @@ async def controls_catalog(_: Identity = Depends(operator_access)):
     controls = []
     for name, spec in _control_registry.get_control_candidates().items():
         low, high = spec.model_range or (None, None)
+        current = values.get(name)
+        in_range = (current is not None and isinstance(current, (int, float))
+                    and math.isfinite(current) and low is not None and high is not None
+                    and low <= current <= high)
         controls.append({
             "id": name,
             "label": spec.semantic_name,
@@ -688,9 +694,12 @@ async def controls_catalog(_: Identity = Depends(operator_access)):
             "max_rate_of_change": spec.max_rate_of_change,
             "source": spec.source,
             "confidence": spec.confidence,
-            "current": values.get(name),
+            "current": current,
             "snapshot_timestamp": values.get("timestamp"),
-            "available": name in values,
+            "available": in_range,
+            "availability_reason": (None if in_range else
+                                    "Нет текущего сигнала" if current is None else
+                                    "Текущее значение вне модельного диапазона"),
             "topology": annotation(topology, name),
         })
     return {"controls": controls, "count": len(controls), "timestamp": utc_now().isoformat()}
@@ -868,6 +877,8 @@ async def q21_runtime(_: Identity = Depends(operator_access)):
         "points": len(points), "required_points": 145,
         "data_state": data_state,
         "latest_point": points[-1] if points else None,
+        "history": [{"timestamp": point["timestamp"], "q21": point["Q21"]}
+                    for point in points[-19:]],
         "latest_forecast": _runtime_store.latest_q21_forecast(),
         "shadow_metrics": shadow_metrics,
     }

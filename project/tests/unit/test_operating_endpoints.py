@@ -10,6 +10,7 @@ from pydantic import ValidationError
 from src.api.runtime_store import RuntimeStore
 from src.api.security import Identity
 from src.feature_service.runtime_buffer import RuntimeFeatureBuffer
+from src.shared.tags.registry import ControlRegistry
 
 api = importlib.import_module("src.api.app")
 
@@ -52,6 +53,18 @@ def test_scenario_rejects_missing_regime(runtime):
         asyncio.run(api.evaluate_scenario(api.ScenarioRequest(action={"avt_T1": 149}, baseline_timestamp=now), SimpleNamespace(state=SimpleNamespace(request_id="unknown-test")), Identity("test", "operator")))
     assert error.value.status_code == 409
     assert "ABSTAIN" in error.value.detail
+
+
+def test_controls_hide_out_of_range_baseline(runtime, monkeypatch):
+    buffer, _ = runtime
+    monkeypatch.setattr(api, "_control_registry", ControlRegistry("configs/controls.yaml"))
+    buffer.push(datetime.now(timezone.utc), {"avt_T1": 150, "avt_T33": 335}, {})
+
+    controls = asyncio.run(api.controls_catalog(Identity("test", "operator")))["controls"]
+    by_id = {item["id"]: item for item in controls}
+    assert by_id["avt_T1"]["available"] is True
+    assert by_id["avt_T33"]["available"] is False
+    assert by_id["avt_T33"]["availability_reason"] == "Текущее значение вне модельного диапазона"
 
 
 @pytest.mark.parametrize("value", [float("nan"), float("inf"), float("-inf")])

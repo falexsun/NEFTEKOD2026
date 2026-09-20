@@ -20,6 +20,11 @@ def utc_now() -> datetime:
     return datetime.now(timezone.utc)
 
 
+def _stored_utc(value: datetime) -> datetime:
+    """Restore UTC metadata stripped by SQLite's datetime round trip."""
+    return value.replace(tzinfo=timezone.utc) if value.tzinfo is None else value.astimezone(timezone.utc)
+
+
 class Base(DeclarativeBase):
     pass
 
@@ -75,12 +80,13 @@ class Q21Forecast(Base):
 class RuntimeStore:
     """Small synchronous repository used from the FastAPI runtime."""
 
-    def __init__(self, database_url: str):
+    def __init__(self, database_url: str, *, initialize_schema: bool = True):
         connect_args = {"check_same_thread": False} if database_url.startswith("sqlite") else {}
         self.engine = create_engine(database_url, pool_pre_ping=True, connect_args=connect_args)
         self.Session = sessionmaker(self.engine, expire_on_commit=False)
         self._lock = threading.RLock()
-        Base.metadata.create_all(self.engine)
+        if initialize_schema:
+            Base.metadata.create_all(self.engine)
         logger.info("Runtime store connected: %s", self.engine.url.render_as_string(hide_password=True))
 
     def append_telemetry(self, timestamp: datetime, payload: dict[str, Any]) -> None:
@@ -92,14 +98,24 @@ class RuntimeStore:
             rows = session.scalars(
                 select(TelemetryPoint).order_by(desc(TelemetryPoint.timestamp)).limit(limit)
             ).all()
-        return [{"timestamp": row.timestamp, **row.payload} for row in reversed(rows)]
+        return [{"timestamp": _stored_utc(row.timestamp), **row.payload} for row in reversed(rows)]
 
     def telemetry_since(self, since: datetime, until: datetime) -> list[dict]:
         with self.Session() as session:
             rows = session.scalars(select(TelemetryPoint).where(
                 TelemetryPoint.timestamp >= since, TelemetryPoint.timestamp <= until
             ).order_by(desc(TelemetryPoint.timestamp)).limit(10000)).all()
-        return [{"timestamp": row.timestamp, **row.payload} for row in reversed(rows)]
+        return [{"timestamp": _stored_utc(row.timestamp), **row.payload} for row in reversed(rows)]
+
+    def training_telemetry(self, since: datetime, until: datetime) -> list[dict[str, Any]]:
+        """Read the complete bounded period; inference's 10k-point cap is unsafe here."""
+        if since >= until:
+            raise ValueError("Training period must have a positive duration")
+        with self.Session() as session:
+            rows = session.scalars(select(TelemetryPoint).where(
+                TelemetryPoint.timestamp >= since, TelemetryPoint.timestamp <= until
+            ).order_by(TelemetryPoint.timestamp)).all()
+        return [{"timestamp": _stored_utc(row.timestamp), **row.payload} for row in rows]
 
     def save_decision(
         self,
@@ -128,7 +144,7 @@ class RuntimeStore:
         return [
             {
                 "decision_id": row.decision_id,
-                "timestamp": row.timestamp,
+                "timestamp": _stored_utc(row.timestamp),
                 "recommendation_type": row.recommendation_type,
                 "actor": row.actor,
                 "request_id": row.request_id,
@@ -150,7 +166,7 @@ class RuntimeStore:
             return None
         return {
             "decision_id": row.decision_id,
-            "timestamp": row.timestamp,
+            "timestamp": _stored_utc(row.timestamp),
             "recommendation_type": row.recommendation_type,
             "actor": row.actor,
             "request_id": row.request_id,
@@ -169,7 +185,7 @@ class RuntimeStore:
     def recent_q21_points(self, limit: int = 145) -> list[dict[str, Any]]:
         with self.Session() as session:
             rows = session.scalars(select(Q21Point).order_by(desc(Q21Point.timestamp)).limit(limit)).all()
-        return [{"timestamp": row.timestamp, "Q21": row.q21, "operating_mode": row.operating_mode,
+        return [{"timestamp": _stored_utc(row.timestamp), "Q21": row.q21, "operating_mode": row.operating_mode,
                  **row.values} for row in reversed(rows)]
 
     def resolve_q21_outcomes(self, timestamp: datetime, actual_q21: float) -> int:
@@ -204,8 +220,8 @@ class RuntimeStore:
                 return None
             rows = session.scalars(select(Q21Forecast).where(Q21Forecast.origin_timestamp == origin)
                                    .order_by(Q21Forecast.horizon_hours)).all()
-        return {"origin_timestamp": origin, "forecast_id": rows[0].forecast_id,
-                "forecasts": [{"horizon_hours": row.horizon_hours, "target_timestamp": row.target_timestamp,
+        return {"origin_timestamp": _stored_utc(origin), "forecast_id": rows[0].forecast_id,
+                "forecasts": [{"horizon_hours": row.horizon_hours, "target_timestamp": _stored_utc(row.target_timestamp),
                                "q21": row.predicted_q21, "lower": row.lower_q21, "upper": row.upper_q21,
                                "actual": row.actual_q21, "absolute_error": row.absolute_error}
                               for row in rows]}

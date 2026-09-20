@@ -3,7 +3,7 @@ import type { Q21Runtime, Q21Status, Snapshot } from '../types'
 import { OperatingModes } from '../components/OperatingModes'
 import { FlowDiagnostics } from '../components/FlowDiagnostics'
 import { Q21ForecastPanel } from '../components/Q21ForecastPanel'
-import { EmptyState, formatAge, formatNumber, StatusBadge } from '../components/ui'
+import { EmptyState, formatAge, formatNumber, presentReason, StatusBadge } from '../components/ui'
 
 function ChangeIndicator({ current, forecast }: { current: number; forecast: number }) {
   const delta = forecast - current
@@ -22,8 +22,8 @@ function ChangeIndicator({ current, forecast }: { current: number; forecast: num
 function Sparkline({ points }: { points: Snapshot['quality']['trend'] }) {
   if (points.length < 2) return <div className="chart-empty">Для тренда нужно минимум две точки</div>
   const values = points.map(point => point.value)
-  const min = Math.min(...values, 0)
-  const max = Math.max(...values, 10)
+  const min = Math.min(...values, 10) - .25
+  const max = Math.max(...values, 10) + .25
   const range = Math.max(1, max - min)
   const line = points.map((point, index) => `${(index / (points.length - 1)) * 100},${50 - ((point.value - min) / range) * 44}`).join(' ')
   const limitY = 50 - ((10 - min) / range) * 44
@@ -39,7 +39,7 @@ function QualityHero({ snapshot }: { snapshot: Snapshot }) {
   return <section className="quality-hero">
     <div className="section-kicker"><span>К01</span> СЕРА В ТОВАРНОМ ДИЗЕЛЕ</div>
     <div className="quality-copy"><StatusBadge state={state}>{value == null ? 'Нет подтверждённого измерения' : value >= 10 ? 'Предел превышен' : value >= 9 ? 'Запас сокращается' : 'В допустимой зоне'}</StatusBadge><div className="quality-number">{formatNumber(value, 2)} <small>мг/кг</small></div><p>Источник: <b>{snapshot.quality.source ?? 'не определён'}</b></p></div>
-    <div className="quality-chart"><Sparkline points={snapshot.quality.trend} /><div className="chart-label limit">Предел 10,0</div></div>
+    <div className="quality-chart"><Sparkline points={snapshot.quality.trend} /><div className="chart-label limit">Предел 10,0</div>{snapshot.quality.trend.length > 1 && <div className="chart-axis"><span>ИСТОРИЯ КАЧЕСТВА</span><span>Изменение {formatNumber(snapshot.quality.trend.at(-1)!.value - snapshot.quality.trend[0].value, 2)} мг/кг</span></div>}</div>
     <div className="forecast"><span>ГОТОВНОСТЬ ПРОГНОЗА</span><strong>{snapshot.readiness.prediction_ready ? 'ГОТОВ' : 'НЕТ'} </strong><p>{snapshot.readiness.history_ready ? 'История накоплена' : `${snapshot.buffer.points} из ${snapshot.buffer.required_points} точек · ${Math.round(snapshot.buffer.duration_minutes)} из ${snapshot.buffer.required_minutes} мин`}</p></div>
   </section>
 }
@@ -48,7 +48,7 @@ function Recommendation({ snapshot, onScenario }: { snapshot: Snapshot; onScenar
   if (!snapshot.operating_policy?.allowed) return <section className="recommendation unavailable-card"><EmptyState title="Рекомендации приостановлены" detail={snapshot.operating_policy?.reasons.join(' · ') ?? 'Режим установки не подтверждён'} state="warning" /></section>
   const record = snapshot.latest_decision
   if (!snapshot.readiness.optimization_ready) return <section className="recommendation unavailable-card"><EmptyState title="Рекомендация заблокирована" detail="Модель сценариев или вектор признаков не готовы. Система не подставляет демонстрационные значения." /></section>
-  if (!record || record.recommendation_type !== 'recommendation') return <section className="recommendation unavailable-card"><EmptyState title="Актуальной рекомендации нет" detail={record?.data.reason ?? 'После появления нового технологического среза запустите цикл принятия решения.'} state="unknown" /></section>
+  if (!record || record.recommendation_type !== 'recommendation') return <section className="recommendation unavailable-card"><EmptyState title="Актуальной рекомендации нет" detail={record?.data.reason ? presentReason(record.data.reason) : 'После появления нового технологического среза запустите цикл принятия решения.'} state="unknown" /></section>
   const changes = Object.entries(record.data.recommended_changes ?? {}) as Array<[string, { current: number; recommended: number; change: number }]>
   return <section className="recommendation">
     <div className="rec-index">{record.decision_id.slice(0, 8)}</div>
@@ -60,12 +60,16 @@ function Recommendation({ snapshot, onScenario }: { snapshot: Snapshot; onScenar
 
 export function ShiftView({ snapshot, q21Status, q21Runtime, onScenario }: { snapshot: Snapshot; q21Status: Q21Status | null; q21Runtime: Q21Runtime | null; onScenario: () => void }) {
   const staleCount = snapshot.sources.filter(source => ['stale', 'critical', 'unknown'].includes(source.state)).length
-  const q21Current = q21Runtime?.latest_point?.Q21
-  const q21Forecast1h = q21Runtime?.latest_forecast?.forecasts.find(f => f.horizon_hours === 1)?.q21
-  const q21Risk = q21Current != null && q21Forecast1h != null && q21Forecast1h >= 9.5 ? 'high' : q21Forecast1h != null && q21Forecast1h >= 9 ? 'medium' : 'low'
-  const timeToLimit = q21Current != null && q21Forecast1h != null && q21Forecast1h > q21Current && q21Current < 10 && q21Forecast1h >= 10
-    ? Math.round((10 - q21Current) / (q21Forecast1h - q21Current) * 60)
-    : null
+  const latestPointTime = q21Runtime?.latest_point?.timestamp ? new Date(q21Runtime.latest_point.timestamp).getTime() : NaN
+  const forecastTime = q21Runtime?.latest_forecast?.origin_timestamp ? new Date(q21Runtime.latest_forecast.origin_timestamp).getTime() : NaN
+  const currentForecast = q21Runtime?.data_state === 'live' && Number.isFinite(latestPointTime) && latestPointTime === forecastTime
+  const q21Current = currentForecast ? q21Runtime?.latest_point?.Q21 : undefined
+  const future = currentForecast ? [...(q21Runtime?.latest_forecast?.forecasts ?? [])].sort((a, b) => a.horizon_hours - b.horizon_hours) : []
+  const firstLimit = future.find(point => point.q21 >= 10)
+  const firstWatch = future.find(point => point.q21 >= 9)
+  const alertPoint = firstLimit ?? firstWatch
+  const q21Risk = firstLimit ? 'high' : firstWatch ? 'medium' : 'low'
+  const alertHorizon = alertPoint?.horizon_hours === 0.5 ? '30 мин' : `${alertPoint?.horizon_hours} ч`
 
   return <>
     <section className="shift-summary" aria-label="Сводка смены">
@@ -76,14 +80,13 @@ export function ShiftView({ snapshot, q21Status, q21Runtime, onScenario }: { sna
     </section>
     {snapshot.mode === 'no_data' && <EmptyState title="Технологический срез ещё не поступил" detail="Экран не показывает вымышленные показания. Отправьте телеметрию через /decision или подключите источник данных." state="unknown" />}
     <OperatingModes policy={snapshot.operating_policy} />
-    {q21Current != null && q21Forecast1h != null && q21Risk !== 'low' && (
+    {q21Current != null && alertPoint && q21Risk !== 'low' && (
       <section className={`q21-alert ${q21Risk === 'high' ? 'critical' : 'warning'}`}>
         <AlertTriangle size={20} />
         <div>
-          <strong>{q21Risk === 'high' ? 'ВНИМАНИЕ: Риск превышения Q21' : 'Наблюдать: Q21 растёт'}</strong>
-          <p>Текущий Q21: {formatNumber(q21Current, 2)} ppm → Прогноз +1ч: {formatNumber(q21Forecast1h, 2)} ppm {q21Current != null && q21Forecast1h != null && <ChangeIndicator current={q21Current} forecast={q21Forecast1h} />}</p>
-          {timeToLimit && <p>Расчётное время до предела 10 ppm: ~{timeToLimit} минут</p>}
-          <p className="action-hint">{q21Risk === 'high' ? 'Рекомендуется проверить анализатор и режим установки' : 'Продолжить наблюдение'}</p>
+          <strong>{q21Risk === 'high' ? 'ВНИМАНИЕ: модель прогнозирует превышение Q21' : 'Контроль Q21 на горизонте до 6 часов'}</strong>
+          <p>Сейчас {formatNumber(q21Current, 2)} ppm → модель для +{alertHorizon}: {formatNumber(alertPoint.q21, 2)} ppm <ChangeIndicator current={q21Current} forecast={alertPoint.q21} /></p>
+          <p className="action-hint">{q21Risk === 'high' ? 'Проверить анализатор и режим. Это не команда на изменение уставки.' : 'Усилить наблюдение за качеством и проверить прогнозную траекторию.'}</p>
         </div>
       </section>
     )}

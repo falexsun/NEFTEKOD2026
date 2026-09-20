@@ -66,13 +66,12 @@ class QualityGates:
                 message=f"Timestamp column '{timestamp_col}' not found"
             )
 
-        latest = pd.to_datetime(data[timestamp_col].max())
-        now = pd.Timestamp(reference_time) if reference_time is not None else (
-            pd.Timestamp.now(tz="UTC") if latest.tzinfo is not None else pd.Timestamp.now())
-        if latest.tzinfo is None and now.tzinfo is not None:
-            now = now.tz_localize(None)
-        elif latest.tzinfo is not None and now.tzinfo is None:
-            now = now.tz_localize("UTC")
+        # Runtime storage (notably SQLite) returns UTC timestamps without tzinfo.
+        # Treat those as UTC, never as the machine's local time.
+        latest = pd.Timestamp(data[timestamp_col].max())
+        latest = latest.tz_localize("UTC") if latest.tzinfo is None else latest.tz_convert("UTC")
+        now = pd.Timestamp(reference_time) if reference_time is not None else pd.Timestamp.now(tz="UTC")
+        now = now.tz_localize("UTC") if now.tzinfo is None else now.tz_convert("UTC")
         age_minutes = (now - latest).total_seconds() / 60
 
         if age_minutes > self.max_staleness_minutes:

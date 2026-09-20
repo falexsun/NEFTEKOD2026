@@ -34,3 +34,19 @@ export function formatAge(minutes: number | null) {
 export function displayUnit(unit: string) {
   return ({ 'mg/kg': 'мг/кг', 'm3/h': 'м³/ч', 't/h': 'т/ч' } as Record<string, string>)[unit] ?? unit
 }
+
+export function presentReason(reason: string) {
+  const unsafe = reason.match(/^No safe scenarios \((\d+) rejected\)$/)
+  if (unsafe) return `Безопасных сценариев не найдено: отклонено ${unsafe[1]}`
+  const history = reason.match(/^Feature buffer not ready: History not ready: (\d+) pts, (\d+) min$/)
+  if (history) return `История признаков: ${history[1]} точек, ${history[2]} мин — недостаточно для расчёта`
+  return reason
+}
+
+export function presentViolation(violation: string) {
+  const sulfur = violation.match(/^Sulfur UCB ([\d.]+) > ([\d.]+)$/)
+  if (sulfur) return `Верхняя граница прогноза серы ${formatNumber(Number(sulfur[1]), 2)} > ${formatNumber(Number(sulfur[2]), 1)} мг/кг`
+  const probability = violation.match(/^P\(viol\) ([\d.]+) > ([\d.]+)$/)
+  if (probability) return `Вероятность нарушения ${formatNumber(Number(probability[1]) * 100, 1)}% > допустимые ${formatNumber(Number(probability[2]) * 100, 1)}%`
+  return violation
+}

@@ -19,12 +19,14 @@ FEATURE_KEY_COLUMNS = [
     "avt_F30", "avt_F32", "avt_W70",
     "u24_T5", "u24_T6", "u24_W7", "u24_P8", "u24_F9", "u24_F15", "u24_T11", "u24_T16",
     "u24_F22", "u24_P24", "u24_P13", "u24_F1",
+    # Present in the deployed champion model's derived feature schema.
+    "avt_T33", "avt_T55",
 ]
 
 LAG_WINDOWS = [1, 2, 3, 6, 12]
 ROLLING_WINDOWS = [6, 12, 36]
-SLOPE_COLUMNS = FEATURE_KEY_COLUMNS[:10]
-MISSING_FLAG_COLUMNS = FEATURE_KEY_COLUMNS[:20]  # Same as training: key_cols[:20]
+SLOPE_COLUMNS = FEATURE_KEY_COLUMNS[:10] + ["avt_T33", "avt_T55"]
+MISSING_FLAG_COLUMNS = FEATURE_KEY_COLUMNS[:20] + ["avt_T33", "avt_T55"]
 
 # Domain feature definitions
 DOMAIN_FEATURES = {

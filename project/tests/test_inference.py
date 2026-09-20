@@ -150,7 +150,7 @@ class TestQualityGates:
         gates = QualityGates(max_staleness_minutes=30)
 
         # Create data from 2 hours ago
-        old_time = pd.Timestamp.now() - timedelta(hours=2)
+        old_time = pd.Timestamp.now(tz="UTC").tz_localize(None) - timedelta(hours=2)
         data = pd.DataFrame({
             'timestamp': [old_time],
             'Q21': [8.5]
@@ -159,6 +159,16 @@ class TestQualityGates:
         result = gates.check_freshness(data)
         assert not result.passed
         assert result.reason_code == "STALE_DATA"
+
+    def test_freshness_check_naive_utc_from_storage(self):
+        """SQLite drops timezone metadata; recent UTC data must remain fresh."""
+        gates = QualityGates(max_staleness_minutes=30)
+        recent_utc = pd.Timestamp.now(tz="UTC").tz_localize(None) - timedelta(minutes=5)
+        data = pd.DataFrame({'timestamp': [recent_utc], 'Q21': [8.5]})
+
+        result = gates.check_freshness(data)
+        assert result.passed
+        assert result.reason_code == "OK"
 
 
 class TestAdvisorySystem:
