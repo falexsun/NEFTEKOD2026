@@ -1,0 +1,22 @@
+# docker-compose.local.yml
+# Override для локальной разработки БЕЗ Docker secrets
+# Использование: docker compose -f docker-compose.yml -f docker-compose.local.yml up
+
+services:
+  postgres:
+    environment:
+      POSTGRES_PASSWORD: neftekod
+      POSTGRES_PASSWORD_FILE:  # Удаляем _FILE переменную
+    secrets: []  # Отключаем secrets
+
+  minio:
+    environment:
+      MINIO_ROOT_PASSWORD: minioadmin
+      MINIO_ROOT_PASSWORD_FILE:  # Удаляем _FILE переменную
+    secrets: []
+
+  grafana:
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: neftekod-local
+      GF_SECURITY_ADMIN_PASSWORD__FILE:  # Удаляем _FILE переменную
+    secrets: []

@@ -1,5 +1,3 @@
-# .gitignore для Нефтекод проекта
-
 # Python
 __pycache__/
 *.py[cod]
@@ -58,7 +56,7 @@ docker-compose.override.yml
 *.h5
 *.hdf5
 
-# Models (кроме примеров)
+# Models (except examples)
 models/*
 !models/.gitkeep
 !models/README.md
@@ -80,6 +78,16 @@ reports/*
 *~
 .DS_Store
 Thumbs.db
+
+# Office temp files
+~$*.docx
+~$*.xlsx
+
+# CatBoost artifacts
+catboost_info/
+
+# EDA experiments (keep only in local workspace)
+eda/
 
 # Node.js
 node_modules/
@@ -145,7 +153,11 @@ credentials.json
 *.bak
 *.backup
 
-# Local status notes, handoffs and presentation drafts (kept outside Git)
+# Presentation files (keep locally)
+*.pptx
+*.pdf
+
+# Internal documentation (kept outside Git)
 /A100_REAL_DATA_STATUS.md
 /ALL_FEATURES_COMPLETE.md
 /ALL_TASKS_COMPLETE.md

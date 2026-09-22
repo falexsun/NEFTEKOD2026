@@ -227,10 +227,23 @@ export NEFTEKOD_ADMIN_API_KEY='...'
 
 ### Docker
 
+**Локальная разработка:**
 ```bash
 cd project
+docker compose -f docker-compose.yml -f docker-compose.local.yml up --build
+```
+
+**Production (с Docker secrets):**
+```bash
+cd project
+# Создайте файлы секретов (см. secrets/README.md)
 docker compose up --build
 ```
+
+Для production обязательно:
+1. Создайте секреты в `secrets/` (см. [secrets/README.md](secrets/README.md))
+2. Используйте только `docker-compose.yml` (без `-f docker-compose.local.yml`)
+3. Настройте файрвол для ограничения доступа к портам
 
 ### Replay
 
